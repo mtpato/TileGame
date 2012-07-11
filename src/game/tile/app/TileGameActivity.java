@@ -12,17 +12,33 @@ import android.widget.Toast;
 
 public class TileGameActivity extends Activity {
 	
-	
+	AppModel model;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        run();
     }
     
     
-    /**
+    private void run() {
+    	model = new AppModel();
+    	if(!model.init()){
+    		doToast("there was an issue connection\n" +
+    				"the the server. Please check \n" +
+    				"your internet connection and \n" +
+    				"try again.");
+    	}
+
+    	
+		
+	}
+
+
+	/**
      * newUserButtonclick
      * 
      * @param view
@@ -35,15 +51,18 @@ public class TileGameActivity extends Activity {
         startActivity(newUser);
     }
     
+    public void quitButtonClick(View view) {
+    	model.sendMsg("quit");
+       finish();
+    }
+    
     
     public void loginButtonClick(View view) {
         System.out.println("newUserClick");
         TextView userView = (TextView) findViewById(R.id.userField);
         TextView passwordView = (TextView) findViewById(R.id.passwordField);
         
-        if(checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
-        	//go to the games screen
-        	
+        if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
         	Intent gamesMenu = new Intent(TileGameActivity.this, GamesMenuActivity.class);
             
             //graph.putExtra("statsTime", model.getStatsTime());
@@ -56,25 +75,20 @@ public class TileGameActivity extends Activity {
         	passwordView.setText("");
         	
         	
-        	Context context = getApplicationContext();
-        	CharSequence text = "UserName and Password were incorrect\nPlease try again";
-        	int duration = Toast.LENGTH_SHORT;
-        	Toast toast = Toast.makeText(context, text, duration);
-        
-        	toast.show();
+        	doToast("UserName and Password were incorrect\nPlease try again");
         }
         
 
     }
 
 
-	private boolean checkLogin(String userName, String Password) {
-		//check here for login info
-		//send it to server for confirmation
-		
-		if(userName.length() > 1) {
-			return true;
-		}
-		return false;
+	private void doToast(String msg) {
+		Context context = getApplicationContext();
+		CharSequence text = msg;
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+      
+		toast.show();
 	}
+
 }

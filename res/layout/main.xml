@@ -49,4 +49,10 @@
         android:onClick="newUserButtonClick"
         android:text="@string/newUser" />
 
+    <Button
+        android:id="@+id/quitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="quitButtonClick"
+        android:text="@string/quit" />
 </LinearLayout>
