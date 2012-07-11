@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 
 /**
@@ -23,10 +24,14 @@ public class AppModel {
 	private BufferedWriter out;
 	
 	private Socket socket;	
-    int port = 4356;
-    String hostname = "10.0.2.2";
+    private int port = 4356;
+    private String hostname = "10.0.2.2";
     
-    String gameName = "tileGame";
+    private String gameName = "tileGame";
+    
+    private String userName;
+    
+    HashMap<Integer,String> games;
 	
 	public boolean init() {
 	
@@ -154,6 +159,38 @@ public class AppModel {
 
 		}
 	}
+	
+	
+	public void getGames() {
+		games = new HashMap<Integer,String>();
+		
+		sendMsg("getGames");
+		
+		String[] string = getReply().split(":");
+		
+		String[] gamesStrings = string[1].split(",");
+			
+		for(String g: gamesStrings) {
+			String[] players = g.split("\\|");
+			
+
+			
+			int gameID = Integer.valueOf(players[0]);
+			
+			for(int i = 1; i < players.length; i++) {
+				
+				String user = players[i].split("-")[0];
+				
+				if(!user.equals(userName)) {
+					games.put(gameID, user);
+				}
+			}
+			
+			
+		}
+	
+
+	}
 
 
 	public Socket getSocket() {
@@ -162,6 +199,14 @@ public class AppModel {
 
 	public void setSocket(Socket socket) {
 		this.socket = socket;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	

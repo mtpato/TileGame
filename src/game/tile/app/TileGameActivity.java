@@ -63,14 +63,19 @@ public class TileGameActivity extends Activity {
         TextView passwordView = (TextView) findViewById(R.id.passwordField);
         
         if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
+        	model.setUserName(userView.getText().toString());
+        	
         	Intent gamesMenu = new Intent(TileGameActivity.this, GamesMenuActivity.class);
             
+        	
+        	
         	//put the i/o in to the IOholder for passing
 
         	SocketHolder.setS(model.getSocket());
         	
         	
             gamesMenu.putExtra("socket", true);
+            gamesMenu.putExtra("userName", model.getUserName());
             startActivity(gamesMenu);
         	
         	

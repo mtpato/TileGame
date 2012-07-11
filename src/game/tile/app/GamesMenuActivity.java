@@ -1,10 +1,13 @@
 package game.tile.app;
 
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class GamesMenuActivity extends Activity{
 	AppModel model;
@@ -21,38 +24,71 @@ public class GamesMenuActivity extends Activity{
         
        // if(this.getIntent().getExtras().get("socket").equals("true")){
         model.setSocket(SocketHolder.getS());
-
+        model.setUserName((String) this.getIntent().getExtras().get("userName"));
         
         model.initIO();
+        
+
         run();
         
     }
     
     
    private void run() {
-		// TODO Auto-generated method stub
+	   	model.getGames();
+	   	
+		displayGames();
+
+	}
+
+	private void displayGames() {
+		
+	    LinearLayout linearLayout = (LinearLayout)findViewById(R.id.gamesMenuLayout);
+	    
+		System.out.println("about to add buttons");
+		for(int gID: model.games.keySet()) {
+			
+			Button btn = new Button(this); 
+		    btn.setText(gID + ":" + model.games.get(gID)); 
+		   
+	         btn.setOnClickListener(new View.OnClickListener() {
+	             public void onClick(View v) {
+	                 enterGame(v);
+	             }
+	         });
+		    
+		    
+		    
+		    linearLayout.addView(btn);
+		}
+		
+
+	}
+
+	protected void enterGame(View v) {
+		System.out.println(((Button)v).getText());
 		
 	}
 
 
- /**
-     * newUserButtonclick
-     * 
-     * @param view
-     */
-    public void cancelButtonClick(View view) {
-       /* Intent data = new Intent();
+	/**
+	 * newUserButtonclick
+	 * 
+	 * @param view
+	 */
+	public void cancelButtonClick(View view) {
+		/*
+		 * Intent data = new Intent();
+		 * 
+		 * data.putExtra("celsius", celsius); data.putExtra("lowerThresh",
+		 * lowerThresh); data.putExtra("upperThresh", upperThresh);
+		 * 
+		 * setResult(RESULT_OK, data);
+		 */
 
-        data.putExtra("celsius", celsius);
-        data.putExtra("lowerThresh", lowerThresh);
-        data.putExtra("upperThresh", upperThresh);
+		model.sendMsg("signOut");
 
-        setResult(RESULT_OK, data);
-		*/
-    	
-    	model.sendMsg("signOut");
-    	
-        finish();
-    }
+		finish();
+	}
     
 }
