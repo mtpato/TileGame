@@ -2,6 +2,8 @@ package game.tile.app;
 
 
 
+import java.util.HashSet;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.LinearLayout;
 
 public class GamesMenuActivity extends Activity{
 	private AppModel model;
+	private HashSet<Button> buttons;
 	
     /**
      * Called when the activity is first created.
@@ -28,7 +31,25 @@ public class GamesMenuActivity extends Activity{
         
         model.initIO();
         
+        buttons = new HashSet<Button>();
+        
 
+       
+        
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        LinearLayout v = (LinearLayout)findViewById(R.id.gamesMenuLayout);
+ 	   
+
+        for(Button b: buttons) {
+        	v.removeView(b);
+        }
+        buttons.clear();
+        
         run();
         
     }
@@ -58,7 +79,7 @@ public class GamesMenuActivity extends Activity{
 	         });
 		    
 		    
-		    
+		    buttons.add(btn);
 		    linearLayout.addView(btn);
 		}
 		
@@ -106,5 +127,7 @@ public class GamesMenuActivity extends Activity{
 
 		finish();
 	}
+	
+
     
 }
