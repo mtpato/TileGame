@@ -23,6 +23,10 @@
         <activity android:name=".NewUserActivity" 
 		          android:label="@string/newUser">
 		</activity>
+		
+         <activity android:name=".GamesMenuActivity" 
+		          android:label="@string/newUser">
+		</activity>
         
     </application>
 

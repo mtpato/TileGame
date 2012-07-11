@@ -11,6 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TileGameActivity extends Activity {
+	
+	
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,15 +44,15 @@ public class TileGameActivity extends Activity {
         if(checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
         	//go to the games screen
         	
-        	Intent newUser = new Intent(TileGameActivity.this, NewUserActivity.class);
+        	Intent gamesMenu = new Intent(TileGameActivity.this, GamesMenuActivity.class);
             
             //graph.putExtra("statsTime", model.getStatsTime());
-            startActivity(newUser);
+            startActivity(gamesMenu);
         	
         	
         } else {
         	
-        	userView.setTag("");
+        	userView.setText("");
         	passwordView.setText("");
         	
         	
@@ -57,6 +60,7 @@ public class TileGameActivity extends Activity {
         	CharSequence text = "UserName and Password were incorrect\nPlease try again";
         	int duration = Toast.LENGTH_SHORT;
         	Toast toast = Toast.makeText(context, text, duration);
+        
         	toast.show();
         }
         
