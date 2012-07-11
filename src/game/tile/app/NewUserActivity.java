@@ -2,7 +2,9 @@ package game.tile.app;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 public class NewUserActivity extends Activity{
 
@@ -17,4 +19,23 @@ public class NewUserActivity extends Activity{
 
         
     }
+    
+    
+    /**
+     * newUserButtonclick
+     * 
+     * @param view
+     */
+    public void cancelButtonClick(View view) {
+       /* Intent data = new Intent();
+
+        data.putExtra("celsius", celsius);
+        data.putExtra("lowerThresh", lowerThresh);
+        data.putExtra("upperThresh", upperThresh);
+
+        setResult(RESULT_OK, data);
+		*/
+        finish();
+    }
+    
 }

@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:onClick="loginButtonClick"
         android:text="@string/login" />
-        <Button
+    <Button
         android:id="@+id/newUserButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
