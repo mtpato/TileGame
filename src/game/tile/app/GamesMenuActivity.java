@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class GamesMenuActivity extends Activity{
-
+	AppModel model;
 	
     /**
      * Called when the activity is first created.
@@ -17,11 +17,25 @@ public class GamesMenuActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.games_menu);
 
+        model = new AppModel();
+        
+       // if(this.getIntent().getExtras().get("socket").equals("true")){
+        model.setSocket(SocketHolder.getS());
+
+        
+        model.initIO();
+        run();
         
     }
     
     
-    /**
+   private void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+ /**
      * newUserButtonclick
      * 
      * @param view
@@ -35,6 +49,9 @@ public class GamesMenuActivity extends Activity{
 
         setResult(RESULT_OK, data);
 		*/
+    	
+    	model.sendMsg("signOut");
+    	
         finish();
     }
     

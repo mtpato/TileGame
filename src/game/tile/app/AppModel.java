@@ -6,11 +6,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
+
 
 /**
  * @author michaelpato
@@ -93,7 +91,7 @@ public class AppModel {
 	/**
 	 * 
 	 */
-	private void initIO() {
+	public void initIO() {
 		//log = new ErrorLogger("errorLog.txt", this.getClass().toString());// init
 																			// the
 																			// error
@@ -156,4 +154,16 @@ public class AppModel {
 
 		}
 	}
+
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
+	
+	
+	
 }

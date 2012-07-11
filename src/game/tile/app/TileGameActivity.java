@@ -65,7 +65,12 @@ public class TileGameActivity extends Activity {
         if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
         	Intent gamesMenu = new Intent(TileGameActivity.this, GamesMenuActivity.class);
             
-            //graph.putExtra("statsTime", model.getStatsTime());
+        	//put the i/o in to the IOholder for passing
+
+        	SocketHolder.setS(model.getSocket());
+        	
+        	
+            gamesMenu.putExtra("socket", true);
             startActivity(gamesMenu);
         	
         	
