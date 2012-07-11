@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class GamesMenuActivity extends Activity{
-	AppModel model;
+	private AppModel model;
 	
     /**
      * Called when the activity is first created.
@@ -67,6 +67,22 @@ public class GamesMenuActivity extends Activity{
 
 	protected void enterGame(View v) {
 		System.out.println(((Button)v).getText());
+		
+		Intent i = new Intent(GamesMenuActivity.this, GameBoardActivity.class);
+        
+    	
+    	
+    	//put the i/o in to the IOholder for passing
+
+    	SocketHolder.setS(model.getSocket());
+    	
+    	
+        i.putExtra("socket", true);
+        i.putExtra("userName", model.getUserName());
+        String[] temp = ((Button)v).getText().toString().split(":");
+        
+        i.putExtra("game", temp[0]);
+        startActivity(i);
 		
 	}
 

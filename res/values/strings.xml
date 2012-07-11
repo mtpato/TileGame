@@ -8,5 +8,7 @@
     <string name="login">Login</string>
     <string name="newUser">New User</string>
     <string name="quit">Quit</string>
+    <string name="gamesMenu">Games Menu</string>
+    <string name="gameBoard">Game Board</string>
 
 </resources>

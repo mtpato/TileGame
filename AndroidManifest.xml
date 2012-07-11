@@ -25,9 +25,13 @@
 		</activity>
 		
          <activity android:name=".GamesMenuActivity" 
-		          android:label="@string/newUser">
+		          android:label="@string/gamesMenu">
 		</activity>
         
+          <activity android:name=".GameBoardActivity" 
+		          android:label="@string/gameBoard">
+		</activity>
+         
     </application>
     
     <uses-permission android:name="android.permission.INTERNET" /> 
