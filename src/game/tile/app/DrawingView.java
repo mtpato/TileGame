@@ -10,12 +10,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class DrawingView extends View{
 	
+
+
+
+
 	private GameState state;
-	private HashMap<RectF,Integer> screenBoard;
+	
+	private HashMap<RectF, Integer> screenBoard = new HashMap<RectF, Integer>();
+	
+	private AppModel model;
 	
 	public DrawingView(Context context) {
 		super(context);
@@ -29,7 +37,9 @@ public class DrawingView extends View{
 
 	
 
-
+	public void setModel(AppModel model) {
+		this.model = model;
+	}
 
 	 /**
      * this is how the graph is drawn every time invalidate is called 
@@ -54,8 +64,8 @@ public class DrawingView extends View{
 		//int buffer = 
 		
 		
-		int w = this.getWidth();
-		int h = this.getHeight();
+		int h = this.getWidth();
+		int w = this.getHeight();
 		
 		int hStep = h / s.height + 1;
 		int vStep = w / s.width + 1;
@@ -77,11 +87,11 @@ public class DrawingView extends View{
         paint.setColor(Color.RED);
       
     	
-    	int buffer = 5;
+    	int buffer = 10;
     	
-		RectF oval = new RectF(n.tileX * hStep + buffer, 
+		RectF oval = new RectF(n.tileX * hStep - buffer, 
 							  n.tileY * vStep + buffer, 
-							  n.tileX * hStep + hStep - buffer, 
+							  n.tileX * hStep + hStep + buffer, 
 							  n.tileY * vStep + vStep- buffer);
     	
 		if(n.active) {
@@ -96,12 +106,72 @@ public class DrawingView extends View{
 		paint.setTextSize(20);
     	
     	canvas.drawText(String.valueOf(n.owner), oval.centerX(), oval.centerY(), paint);
-    	
+    	screenBoard.put(oval, n.nodeID);
     	
 
     	
 		
 	}
+    
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// TODO Auto-generated method stub
+		boolean clicked = false;
+
+		float x = event.getX();
+		float y = event.getY();
+		System.out.println(x + " " + y);
+		
+
+		int action = event.getAction();
+
+		switch (action) {
+		case MotionEvent.ACTION_DOWN:
+			clicked = true;
+			break;
+		case MotionEvent.ACTION_MOVE:
+			clicked = false;
+			break;
+		case MotionEvent.ACTION_UP:
+			clicked = false;
+			break;
+		case MotionEvent.ACTION_CANCEL:
+			clicked = false;
+			break;
+		case MotionEvent.ACTION_OUTSIDE:
+			clicked = false;
+			break;
+		default:
+		}
+		
+		if(clicked) {
+			handleTouchEvent(x, y);
+
+			DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
+
+			model.drawBoard(state, v);
+		}
+
+		return true; // processed
+	}
+	
+	public void handleTouchEvent(float x, float y) {
+
+		for (RectF o : screenBoard.keySet()) {
+			
+			if (o.contains(x, y)) {
+				// make the move on the server
+				System.out.println(o);
+				System.out.println("###############in a rect--------------------------");
+				model.makeMove(screenBoard.get(o),this);
+				
+
+			}
+
+		}
+	
+	}
+    
 
 	// @Override
     public void update(Observable arg0, Object arg1) {

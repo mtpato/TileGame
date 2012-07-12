@@ -37,10 +37,10 @@ public class AppModel {
 	HashMap<Integer, String> games;
 
 	private GameModel gameModel = new TileModel();
+	private int gameID;
 
-	private HashMap<RectF, Integer> screenBoard = new HashMap<RectF, Integer>();
 
-	boolean fingerOn = false;
+	
 	
 	public boolean init() {
 
@@ -120,7 +120,7 @@ public class AppModel {
 		}
 	}
 
-	private String getReply() {
+	public String getReply() {
 		String msg = null;
 
 		while (msg == null) {
@@ -217,64 +217,39 @@ public class AppModel {
 
 		
 
-		updateScreenBoard(state, v);
+	
 
 		v.setGameState(state);
-		v.setScreenBoard(screenBoard);
+		
 		v.invalidate();
 
-		gameModel.printState(state);
+		//gameModel.printState(state);
 
 	}
 
-	private void updateScreenBoard(GameState state, DrawingView v) {
-		TileGameState s = (TileGameState) state;
-
-		// int buffer =
-
-		int w = v.getWidth();
-		int h = v.getHeight();
-
-		int hStep = h / s.height + 1;
-		int vStep = w / s.width + 1;
-
-		for (TileNode n : s.tiles.values()) {
-
-			makeRects(n, hStep, vStep);
-
-		}
-
-	}
-
-	private void makeRects(TileNode n, int hStep, int vStep) {
-	   	int buffer = 5;
-		RectF oval = new RectF(n.tileX * hStep + buffer, 
-				  n.tileY * vStep + buffer, 
-				  n.tileX * hStep + hStep - buffer, 
-				  n.tileY * vStep + vStep- buffer);
-		
-		screenBoard.put(oval, n.nodeID);
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
 		
 	}
 
-	public void handleTouchEvent(float x, float y) {
-		if(!fingerOn) {
-			
-			for(RectF o : screenBoard.keySet()) {
-				
-				if(o.contains(x, y)) {
-					//make the move on the server
-					//update the state
-					//update the board 
-				}
-				
-			}
-			
-			
-			
-			
-		}
+
+	public void makeMove(int nodeID, DrawingView v) {
+		sendMsg("makeMove:" + gameID + "," + nodeID);
+
+		String compState = getReply();
+
+		System.out.println(compState);
+		
+		drawBoard(gameModel.parseGameState(compState), v);
+		
 		
 	}
+
+
+
+	
+
+
+
 
 }
