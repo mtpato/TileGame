@@ -65,13 +65,17 @@ public class TileModel extends GameModel{
 		for(TileNode t: s.tiles.values()) {
 			if(t.owner == -1) {
 				tiles.add(t);
+				System.out.println("tileAdded: " + t.nodeID + " owner: " + t.owner);
 			}
 		}
 		
 		if(tiles.size() > 0) {
 			int ran = rand.nextInt(tiles.size());
+			System.out.println("tileAdded: " + tiles.get(ran).nodeID + " owner: " + tiles.get(ran).owner);
 			
 			tiles.get(ran).owner = owner;
+			System.out.println("tileAdded: " + tiles.get(ran).nodeID + " owner: " + tiles.get(ran).owner);
+			
 
 		}
 		
@@ -117,7 +121,7 @@ public class TileModel extends GameModel{
 			args.put(temp[0], temp[1]);
 		}
 		
-		System.out.println(args);
+		//System.out.println(args);
 		HashSet<Integer> players = new HashSet<Integer>();
 		
 		TileGameState state = new TileGameState(players, Integer.valueOf(args.get("h")), Integer.valueOf(args.get("w")));
