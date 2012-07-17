@@ -168,22 +168,25 @@ public class AppModel {
 
 		String[] string = getReply().split(":");
 
-		String[] gamesStrings = string[1].split(",");
+		
+		if(string.length > 1) {
+			String[] gamesStrings = string[1].split(",");
 
-		for (String g : gamesStrings) {
-			String[] players = g.split("\\|");
+			for (String g : gamesStrings) {
+				String[] players = g.split("\\|");
 
-			int gameID = Integer.valueOf(players[0]);
+				int gameID = Integer.valueOf(players[0]);
 
-			for (int i = 1; i < players.length; i++) {
+				for (int i = 1; i < players.length; i++) {
 
-				String user = players[i].split("-")[0];
+					String user = players[i].split("-")[0];
 
-				if (!user.equals(userName)) {
-					games.put(gameID, user);
+					if (!user.equals(userName)) {
+						games.put(gameID, user);
+					}
 				}
-			}
 
+			}
 		}
 
 	}
