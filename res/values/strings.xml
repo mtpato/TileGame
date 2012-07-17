@@ -10,5 +10,11 @@
     <string name="quit">Quit</string>
     <string name="gamesMenu">Games Menu</string>
     <string name="gameBoard">Game Board</string>
+    <string name="userName">User Name</string>
+    <string name="createAccount">Create Account</string>
+    <string name="email">Email</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="newGame">New Game </string>
 
 </resources>

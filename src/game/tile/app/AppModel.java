@@ -9,10 +9,13 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * @author michaelpato
@@ -248,8 +251,86 @@ public class AppModel {
 		
 	}
 
+	public boolean makeNewUser(String user, String pass, String email) {
+		sendMsg("newUser:" + user + "," + pass + "," + email);
+		
+		String reply = getReply();
+		
+		if(reply.equals("done")) {
+			return true;
+		}
+		return false;
+	}
 
 
+
+	public void doToast(String msg, Activity a) {
+		Context context = a.getApplicationContext();
+		CharSequence text = msg;
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+      
+		toast.show();
+	}
+
+	/**
+	 * returns if the password is a valid password
+	 * 
+	 * ISSUE: THIS IS NOT IMPLEMENTED AWAYS RETURNS TRUE
+	 * MUST BE FIXED TO GO LIVE 
+	 * 
+	 * 
+	 * @param pass
+	 * @return
+	 */
+	public boolean isValidPass(String pass) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	/**
+	 * returns if the user has supplied a valid username
+	 * 
+	 * ISSUE: THIS IS NOT IMPLEMENTED AWAYS RETURNS TRUE
+	 * MUST BE FIXED TO GO LIVE 
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public boolean isValidUser(String user) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	
+	/**
+	 * returns if the user has supplied a valid email
+	 * 
+	 * ISSUE: THIS IS NOT IMPLEMENTED AWAYS RETURNS TRUE
+	 * MUST BE FIXED TO GO LIVE 
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public boolean isValidEmail(String email) {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean makeNewgame(String in) {
+		sendMsg("newGame:" + in);
+		
+		String reply = getReply();
+		
+		System.out.println("reply: " + reply);
+		
+		if(reply.equals("done:gameCreated")) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 	
 
 

@@ -19,11 +19,19 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/cancelButtonClick"
+        android:id="@+id/logoutButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="cancelButtonClick"
-        android:text="Cancel" />
+        android:onClick="logoutButtonClick"
+        android:text="@string/logout"
+         />
+    <Button
+        android:id="@+id/newGameButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="newGameButtonClick"
+        android:text="@string/newGame"
+         />
 
 </LinearLayout>
 </ScrollView>

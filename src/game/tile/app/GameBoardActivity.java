@@ -13,7 +13,7 @@ public class GameBoardActivity extends Activity{
 	private AppModel model;
 	private int gameID;
 	private GameState state;
-	boolean fingerOn = false;
+
 
 	/**
 	 * Called when the activity is first created.
@@ -46,7 +46,11 @@ public class GameBoardActivity extends Activity{
 
 	}
 
+    public void refreshButtonClick(View view) {
+    	run();
 
+    	
+     }
 
 	
 

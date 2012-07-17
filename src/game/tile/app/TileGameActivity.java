@@ -27,10 +27,10 @@ public class TileGameActivity extends Activity {
     private void run() {
     	model = new AppModel();
     	if(!model.init()){
-    		doToast("there was an issue connection\n" +
+    		model.doToast("there was an issue connection\n" +
     				"the the server. Please check \n" +
     				"your internet connection and \n" +
-    				"try again.");
+    				"try again.", this);
     	}
 
     	
@@ -46,6 +46,11 @@ public class TileGameActivity extends Activity {
     public void newUserButtonClick(View view) {
         System.out.println("newUserClick");
         Intent newUser = new Intent(TileGameActivity.this, NewUserActivity.class);
+        
+    	SocketHolder.setS(model.getSocket());
+    	
+    	
+    	newUser.putExtra("socket", true);
         
         //graph.putExtra("statsTime", model.getStatsTime());
         startActivity(newUser);
@@ -85,20 +90,12 @@ public class TileGameActivity extends Activity {
         	passwordView.setText("");
         	
         	
-        	doToast("UserName and Password were incorrect\nPlease try again");
+        	model.doToast("UserName and Password were incorrect\nPlease try again", this);
         }
         
 
     }
 
 
-	private void doToast(String msg) {
-		Context context = getApplicationContext();
-		CharSequence text = msg;
-		int duration = Toast.LENGTH_SHORT;
-		Toast toast = Toast.makeText(context, text, duration);
-      
-		toast.show();
-	}
 
 }

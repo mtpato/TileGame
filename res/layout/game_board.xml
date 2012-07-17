@@ -19,6 +19,13 @@
         android:layout_height="wrap_content"
         android:onClick="cancelButtonClick"
         android:text="Cancel" />
+    
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="refreshButtonClick"
+        android:text="refresh" />
 
     <game.tile.app.DrawingView
         android:id="@+id/boardLayout"
