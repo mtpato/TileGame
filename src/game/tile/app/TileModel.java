@@ -38,6 +38,8 @@ public class TileModel extends GameModel{
 			
 			
 		}
+		
+		drawTile(s, moveNode.owner);
 
 		
 		//check if the game is over 
@@ -45,6 +47,36 @@ public class TileModel extends GameModel{
 		if(isOver(s)) s.over = true;
 		
 		return s;
+	}
+
+
+
+	/**
+	 * if there are still tiles that are not owned this 
+	 * method draws a random tile form the tiles that are left 
+	 * and assigns it to the player that just moved.
+	 * 
+	 * @param s
+	 * @param owner 
+	 */
+	private void drawTile(TileGameState s, int owner) {
+		ArrayList<TileNode> tiles = new ArrayList<TileNode>();
+		
+		for(TileNode t: s.tiles.values()) {
+			if(t.owner == -1) {
+				tiles.add(t);
+			}
+		}
+		
+		if(tiles.size() > 0) {
+			int ran = rand.nextInt(tiles.size());
+			
+			tiles.get(ran).owner = owner;
+
+		}
+		
+		
+		
 	}
 
 
@@ -96,7 +128,7 @@ public class TileModel extends GameModel{
 		//System.out.println(temp);
 		
 		for(String line: temp.split("\\|")) {
-			String[] splitTemp = line.split("-");
+			String[] splitTemp = line.split("!");
 			//System.out.println(line);
 			
 			state.players.add(Integer.valueOf(splitTemp[0]));
@@ -120,7 +152,7 @@ public class TileModel extends GameModel{
 		
 		//make the nodes
 		for(String nodeString: splitBoard) {
-			String[] nodeInfo = nodeString.split("-");
+			String[] nodeInfo = nodeString.split("!");
 			
 			TileNode n = new TileNode(Integer.valueOf(nodeInfo[0]), 
 									  Integer.valueOf(nodeInfo[1]),
@@ -138,7 +170,7 @@ public class TileModel extends GameModel{
 		
 		//add adjs
 		for(String nodeString: splitBoard) {
-			String[] nodeInfo = nodeString.split("-");
+			String[] nodeInfo = nodeString.split("!");
 			
 			String[] adjs = nodeInfo[5].split("\\.");
 			
@@ -158,7 +190,7 @@ public class TileModel extends GameModel{
 	 * players=userID-score|userID-score|userID-score...,h=height,w=width,board=node|node|node|node...,over=0or1
 	 * 
 	 * a node looks like this:
-	 * nodeID-x-y-owner-active-adjList
+	 * nodeID!x!y!owner!active!adjList
 	 * 
 	 * an adjList looks like this:
 	 * nodeID.nodeID.nodeID.nodeID...
@@ -176,7 +208,7 @@ public class TileModel extends GameModel{
 		
 		buf.append("players=");
 		for(int p: s.players) {
-			buf.append(p + "-" + s.scores.get(p) +"|");
+			buf.append(p + "!" + s.scores.get(p) +"|");
 			
 		}
 		buf.deleteCharAt(buf.length() - 1);
@@ -188,13 +220,13 @@ public class TileModel extends GameModel{
 		
 		buf.append(",board=");
 		for(TileNode t: s.tiles.values()) {
-			buf.append(t.nodeID + "-" + t.tileX + "-" + t.tileY + "-" +
-					t.owner + "-");
+			buf.append(t.nodeID + "!" + t.tileX + "!" + t.tileY + "!" +
+					t.owner + "!");
 			
 			if(t.active) buf.append(1);
 			else buf.append(0);
 			
-			buf.append("-");
+			buf.append("!");
 			
 			for(TileNode adj: t.adj) {
 				buf.append(adj.nodeID + ".");
@@ -298,44 +330,31 @@ public class TileModel extends GameModel{
 
 
 
+	/**
+	 * this assigns n random tiles to the players 
+	 * 
+	 * 
+	 * @param state
+	 * @param users
+	 */
 	private void assignTiles(TileGameState state, Set<Integer> users) {
 		ArrayList<Integer> userList = new ArrayList<Integer>(users);
+		ArrayList<TileNode> tiles = new ArrayList<TileNode>(state.tiles.values());
 		
+		
+		int startNum = 10; //the number of tiles each player gets at the start
+		
+		int numPlayers = userList.size();
 		int p;
-		int aCount = 0;
-		int bCount = 0;
 		
-		for(TileNode t: state.tiles.values()) {
-			p = rand.nextInt(2);
+		
+		for(int i = 0; i < startNum * numPlayers; i++) {
+			p = rand.nextInt(tiles.size());
 			
-			
-			//System.out.println(t.nodeID);
-			
-			if(aCount == state.tiles.size() / 2) {
-				t.owner = userList.get(1);
-				bCount++;
-				
-			} else if(bCount == state.tiles.size() / 2) {
-				t.owner = userList.get(0);
-				aCount++;
-				
-			} else if(p == 0) {
-				t.owner = userList.get(0);
-				aCount++;
-				
-			} else {
-				t.owner = userList.get(1);
-				bCount++;
-			}
-			
-			
-			
+			TileNode t = tiles.remove(p);
+			t.owner = userList.get(i % numPlayers);
+	
 		}
-		
-		System.out.println("A: " + aCount);
-		System.out.println("B: " + bCount);
-
-		
 		
 	}
 	
