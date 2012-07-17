@@ -127,13 +127,13 @@ public class DrawingView extends View{
 
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			clicked = true;
+			clicked = false;
 			break;
 		case MotionEvent.ACTION_MOVE:
 			clicked = false;
 			break;
 		case MotionEvent.ACTION_UP:
-			clicked = false;
+			clicked = true;
 			break;
 		case MotionEvent.ACTION_CANCEL:
 			clicked = false;
@@ -160,11 +160,12 @@ public class DrawingView extends View{
 		for (RectF o : screenBoard.keySet()) {
 			
 			if (o.contains(x, y)) {
+				System.out.println("WE GOT ONE THIS COULD BE AN ISSUE_______");
 				// make the move on the server
 				System.out.println(o);
 				System.out.println("###############in a rect--------------------------");
 				model.makeMove(screenBoard.get(o),this);
-				
+				break;//bad fix but a fix, not sure whats up here 
 
 			}
 
