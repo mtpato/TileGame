@@ -61,6 +61,8 @@ public class DrawingView extends View{
 	protected void onDraw(Canvas canvas) {
 		TileGameState s = (TileGameState) state;
 		
+		screenBoard.clear();
+		
 		int topBuffer = 30 ;
 		
 		
@@ -120,7 +122,7 @@ public class DrawingView extends View{
 							  n.tileY * vStep + vStep - buffer + topBuffer);
     	
 		if(n.owner == model.getUserID()) {
-			System.out.println("MINE");
+			
 			if(n.active) {
 				paint.setColor(Color.RED);
 			} else {
@@ -196,16 +198,12 @@ public class DrawingView extends View{
 	
 	public void handleTouchEvent(float x, float y) {
 		
-		System.out.println(screenBoard.keySet());
+		
 		
 		for (RectF o : screenBoard.keySet()) {
 			
 			if (o.contains(x, y) && model.validMove(screenBoard.get(o), state)) {
-				//System.out.println(o);
-
 				model.makeMove(screenBoard.get(o),this);
-				break;//bad fix but a fix, not sure whats up here 
-
 			}
 
 		}
