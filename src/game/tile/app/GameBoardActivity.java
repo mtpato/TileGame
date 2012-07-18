@@ -1,12 +1,14 @@
 package game.tile.app;
 
 
+import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -38,11 +40,13 @@ public class GameBoardActivity extends Activity{
 
 		gameID = Integer.valueOf(b.get("game").toString());
 		
-		run();
+		
+		timer();
+		runBoard();
 	}
     
     
-    private void run() {
+    private void runBoard() {
     	state = model.getState(String.valueOf(gameID));
     	
     	DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
@@ -56,11 +60,41 @@ public class GameBoardActivity extends Activity{
 
 	}
     
+
+    /**
+     *  this is the handler for the Runnable for the timer
+     */
+    private Handler timerHandler = new Handler();
+
+    
+
+    /**
+     * this function initiates the runnable for the handler
+     */
+    public void timer() {
+        
+        timerHandler.removeCallbacks(getStateTimer);
+        timerHandler.postDelayed(getStateTimer, 1000);
+
+    }
+    
+
+    /**
+     * 
+     */
+    public Runnable getStateTimer = new Runnable() {
+    	public void run() {
+
+    			runBoard();
+    		    timerHandler.postDelayed(this, 1000);
+    		
+    	}		
+    };	
     
     
 
     public void refreshButtonClick(View view) {
-    	run();
+    	runBoard();
 
     	
      }
@@ -73,15 +107,15 @@ public class GameBoardActivity extends Activity{
 	 * @param view
 	 */
     public void cancelButtonClick(View view) {
-       /* Intent data = new Intent();
-
-        data.putExtra("celsius", celsius);
-        data.putExtra("lowerThresh", lowerThresh);
-        data.putExtra("upperThresh", upperThresh);
-
-        setResult(RESULT_OK, data);
-		*/
+    	
         finish();
     }
     
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	
+    	timerHandler.removeCallbacks(getStateTimer);
+    	
+    }
 }
