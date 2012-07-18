@@ -1,6 +1,8 @@
 package game.tile.app;
 
 
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.RectF;
@@ -48,8 +50,14 @@ public class GameBoardActivity extends Activity{
     	v.setModel(model);
     	model.setGameID(gameID);
 		model.drawBoard(state, v);
+		
+		
+		 
 
 	}
+    
+    
+    
 
     public void refreshButtonClick(View view) {
     	run();

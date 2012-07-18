@@ -57,7 +57,7 @@ public class TileGameActivity extends Activity {
     }
     
     public void quitButtonClick(View view) {
-    	model.sendMsg("quit");
+    	model.quitGame();
        finish();
     }
     

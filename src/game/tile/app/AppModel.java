@@ -60,9 +60,8 @@ public class AppModel {
 			return init();
 		}
 
-		sendMsg(gameName);
-
-		if (!getReply().equals("done")) {
+		
+		if (!callServer(gameName).equals("done")) {
 			return false;
 		}
 
@@ -91,9 +90,8 @@ public class AppModel {
 		// check here for login info
 		// send it to server for confirmation
 
-		sendMsg("login:" + userName.trim() + "," + password.trim());
 
-		if (getReply().equals("done")) {
+		if (callServer("login:" + userName.trim() + "," + password.trim()).equals("done")) {
 			return true;
 		}
 		return false;
@@ -126,8 +124,16 @@ public class AppModel {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	private synchronized String callServer(String msg) {
+		sendMsg(msg);
+	
+		return getReply();
+		
+	}
 
-	public String getReply() {
+	private String getReply() {
 		String msg = null;
 
 		while (msg == null) {
@@ -150,7 +156,7 @@ public class AppModel {
 
 	}
 
-	public void sendMsg(String msg) {
+	private void sendMsg(String msg) {
 		if (msg != null && !msg.equals("")) {
 			try {
 				out.write(msg);
@@ -172,9 +178,9 @@ public class AppModel {
 		games = new HashMap<Integer, String>();
 		users = new HashMap<String, Integer>();
 		
-		sendMsg("getGames");
+		
 
-		String[] string = getReply().split(":");
+		String[] string = callServer("getGames").split(":");
 
 		
 		if(string.length > 1) {
@@ -220,9 +226,9 @@ public class AppModel {
 	}
 
 	public GameState getState(String gameID) {
-		sendMsg("gameState:" + gameID);
+		
 
-		String compState = getReply();
+		String compState = callServer("gameState:" + gameID);
 
 		System.out.println(compState);
 		return gameModel.parseGameState(compState.split(":")[1]);
@@ -249,9 +255,8 @@ public class AppModel {
 
 
 	public void makeMove(int nodeID, DrawingView v) {
-		sendMsg("makeMove:" + gameID + "," + nodeID);
 
-		String compState = getReply();
+		String compState = callServer("makeMove:" + gameID + "," + nodeID);
 
 		System.out.println(compState);
 		
@@ -261,9 +266,9 @@ public class AppModel {
 	}
 
 	public boolean makeNewUser(String user, String pass, String email) {
-		sendMsg("newUser:" + user + "," + pass + "," + email);
 		
-		String reply = getReply();
+		
+		String reply = callServer("newUser:" + user + "," + pass + "," + email);
 		
 		if(reply.equals("done")) {
 			return true;
@@ -327,9 +332,8 @@ public class AppModel {
 	}
 
 	public boolean makeNewgame(String in) {
-		sendMsg("newGame:" + in);
 		
-		String reply = getReply();
+		String reply = callServer("newGame:" + in);
 		
 		System.out.println("reply: " + reply);
 		
@@ -370,11 +374,21 @@ public class AppModel {
 		System.out.println(s.tiles);
 		System.out.println(t);
 		
-		if(t.active || t.owner != userID) {
+		if(s.turn != userID || t.active || t.owner != userID ) {
 			return false;
 		}
 		
 		return true;
+	}
+
+	public void signOut() {
+		callServer("signOut");
+		
+	}
+
+	public void quitGame() {
+		callServer("quit");
+		
 	}
 	
 	

@@ -82,13 +82,23 @@ public class DrawingView extends View{
 	     System.out.println("about to print the scores");
 	     for(int p : s.players) {
 	    	 System.out.println("drawingScore: " + p);
-	    	 
+	    	 paint.setTextScaleX(1);
 	    	 if(p == model.getUserID()) {
+	    		 if(p == s.turn) {
+	    			 paint.setTextScaleX(2);
+	    			 
+	    		 }
+	    		 
 	    		 paint.setColor(Color.RED);
 		    	 canvas.drawText(model.getUserName() + ": " + s.scores.get(p), printBuffer, topBuffer, paint);
 		 	    
 	    	 } else  {
-	    		 paint.setColor(Color.BLUE);
+	    		 if(p == s.turn) {
+	    			 paint.setTextScaleX(2);
+	    			 
+	    		 }
+	    		 
+	    		 paint.setColor(Color.CYAN);
 		    	 canvas.drawText(model.getOpName() + ": " + s.scores.get(p), printBuffer, topBuffer, paint);
 
 	    	 }
@@ -132,7 +142,7 @@ public class DrawingView extends View{
 		} else if(n.active){
 			
 			
-				paint.setColor(Color.BLUE);
+				paint.setColor(Color.CYAN);
 			
 			
 		} else {
