@@ -11,7 +11,9 @@ public class TileGameState implements GameState {
 	int width;
 	int height;
 	HashMap<Integer,Integer> scores;
+	//HashMap<Integer,String> usersNames;
 	boolean over = false;
+	int turn;
 	
 	
 	public TileGameState(Set<Integer> players, int height, int width) {
@@ -19,9 +21,10 @@ public class TileGameState implements GameState {
 		this.height = height;
 		this.width = width;
 		
-		
+		//usersNames = new HashMap<Integer,String>();
 		tiles = new HashMap<String,TileNode>();
 		scores = new HashMap<Integer,Integer>();
+		
 	}
 	
 }
