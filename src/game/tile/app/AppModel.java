@@ -361,6 +361,21 @@ public class AppModel {
 	public void setOpName(String opName) {
 		this.opName = opName;
 	}
+
+	public boolean validMove(int nodeID, GameState state) {
+		TileGameState s = (TileGameState) state;
+		TileNode t = s.tiles.get(String.valueOf(nodeID));
+		
+		System.out.println(nodeID);
+		System.out.println(s.tiles);
+		System.out.println(t);
+		
+		if(t.active || t.owner != userID) {
+			return false;
+		}
+		
+		return true;
+	}
 	
 	
 	

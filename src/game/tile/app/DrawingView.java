@@ -195,14 +195,14 @@ public class DrawingView extends View{
 	}
 	
 	public void handleTouchEvent(float x, float y) {
-
+		
+		System.out.println(screenBoard.keySet());
+		
 		for (RectF o : screenBoard.keySet()) {
 			
-			if (o.contains(x, y)) {
-				System.out.println("WE GOT ONE THIS COULD BE AN ISSUE_______");
-				// make the move on the server
-				System.out.println(o);
-				System.out.println("###############in a rect--------------------------");
+			if (o.contains(x, y) && model.validMove(screenBoard.get(o), state)) {
+				//System.out.println(o);
+
 				model.makeMove(screenBoard.get(o),this);
 				break;//bad fix but a fix, not sure whats up here 
 
