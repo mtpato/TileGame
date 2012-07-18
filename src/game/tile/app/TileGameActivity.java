@@ -5,6 +5,7 @@ package game.tile.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -26,15 +27,15 @@ public class TileGameActivity extends Activity {
     
     private void run() {
     	model = new AppModel();
+    	model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+
     	if(!model.init()){
     		model.doToast("there was an issue connection\n" +
     				"the the server. Please check \n" +
     				"your internet connection and \n" +
     				"try again.", this);
     	}
-
-    	
-		
+	
 	}
 
 
@@ -50,7 +51,13 @@ public class TileGameActivity extends Activity {
     	SocketHolder.setS(model.getSocket());
     	
     	
-    	newUser.putExtra("socket", true);
+    	if(model.getSocket() != null && model.getSocket().isConnected()) {
+    		newUser.putExtra("socket", true);
+    	} else {
+    		newUser.putExtra("socket", false);
+    	}
+    	
+    	
         
         //graph.putExtra("statsTime", model.getStatsTime());
         startActivity(newUser);
@@ -67,13 +74,13 @@ public class TileGameActivity extends Activity {
         TextView userView = (TextView) findViewById(R.id.userField);
         TextView passwordView = (TextView) findViewById(R.id.passwordField);
         
-        if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString())) {
+        
+        
+        if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString(), this)) {
         	model.setUserName(userView.getText().toString());
         	
         	Intent gamesMenu = new Intent(TileGameActivity.this, GamesMenuActivity.class);
-            
-        	
-        	
+            	
         	//put the i/o in to the IOholder for passing
 
         	SocketHolder.setS(model.getSocket());
@@ -89,8 +96,6 @@ public class TileGameActivity extends Activity {
         	userView.setText("");
         	passwordView.setText("");
         	
-        	
-        	model.doToast("UserName and Password were incorrect\nPlease try again", this);
         }
         
 

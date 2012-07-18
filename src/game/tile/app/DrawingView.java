@@ -104,7 +104,7 @@ public class DrawingView extends View{
 	    	 }
 	    		 
 	    	 
-	    	 printBuffer+=200;
+	    	 printBuffer+=250;
 	     }
 		
 		
@@ -136,7 +136,8 @@ public class DrawingView extends View{
 			if(n.active) {
 				paint.setColor(Color.RED);
 			} else {
-				paint.setColor(Color.MAGENTA);
+				
+				paint.setColor(Color.rgb(255, 140, 140));
 			}
 					
 		} else if(n.active){

@@ -2,7 +2,9 @@ package game.tile.app;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -18,10 +20,23 @@ public class NewUserActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_user_main);
 
-        model = new AppModel();
-		model.setSocket(SocketHolder.getS());
-		model.initIO();
+        Bundle b = this.getIntent().getExtras();
         
+        model = new AppModel();
+		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+        
+		
+        if(b.getBoolean("socket")) {
+    		model.setSocket(SocketHolder.getS());
+    		model.initIO();
+        } else {
+    		model.doToast("there was an issue connection\n" +
+    				"the the server. Please check \n" +
+    				"your internet connection and \n" +
+    				"try again.", this);
+        }
+
+
     }
     
     
@@ -38,7 +53,7 @@ public class NewUserActivity extends Activity{
         if(model.isValidPass(pass) &&
            model.isValidUser(user) &&
            model.isValidEmail(email) &&
-           model.makeNewUser(user,pass,email)) {
+           model.makeNewUser(user,pass,email,this)) {
         	
         	model.doToast("User was created!", this);
 
@@ -51,10 +66,6 @@ public class NewUserActivity extends Activity{
         	passwordView.setText("");
         	emailView.setText("");
         	
-        	
-        	
-        	model.doToast("This was not a valid Username, Password,\n" +
-        				  "or email. Please try a different one ", this);
         }
         
 

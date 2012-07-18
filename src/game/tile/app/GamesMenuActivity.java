@@ -6,8 +6,10 @@ import java.util.HashSet;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +36,7 @@ public class GamesMenuActivity extends Activity{
         model.setUserName((String) this.getIntent().getExtras().get("userName"));
         
         model.initIO();
+        model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
         
         buttons = new HashSet<Button>();
         

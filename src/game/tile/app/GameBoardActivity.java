@@ -5,8 +5,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -37,8 +40,11 @@ public class GameBoardActivity extends Activity{
 		
 		model.setOpName((String) b.get("opName"));
 		model.initIO();
-
+		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+		
+		
 		gameID = Integer.valueOf(b.get("game").toString());
+		
 		
 		
 		timer();
@@ -95,10 +101,11 @@ public class GameBoardActivity extends Activity{
 
     public void refreshButtonClick(View view) {
     	runBoard();
+    	
+    	
 
     	
      }
-
 	
 
 	/**

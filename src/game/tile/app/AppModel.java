@@ -12,6 +12,8 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.RectF;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +33,7 @@ public class AppModel {
 
 	private Socket socket;
 	private int port = 4356;
-	private String hostname = "10.0.2.2";
+	private String hostname = "76.124.118.128";
 
 	private String gameName = "tileGame";
 
@@ -45,27 +47,38 @@ public class AppModel {
 
 	private GameModel gameModel = new TileModel();
 	private int gameID;
+	
+	private ConnectivityManager connectMan;
 
 
 	
 	
 	public boolean init() {
 
-		socket = connectToServer(hostname, port);
-
-		System.out.println("got socket");
-		initIO();
-
-		if (!getReply().equals("done")) {
-			return init();
-		}
-
 		
-		if (!callServer(gameName).equals("done")) {
-			return false;
-		}
+		if (isConnectedToInet()) {
+			socket = connectToServer(hostname, port);
 
-		return true;
+			System.out.println("got socket");
+			if(socket != null && socket.isConnected()) {
+				initIO();
+
+				if (!getReply().equals("done")) {
+					return init();
+				}
+
+				
+				if (!callServer(gameName).equals("done")) {
+					return false;
+				}
+
+				return true;
+			}
+			return false;
+	
+		}
+		
+		return false;
 
 	}
 
@@ -86,15 +99,26 @@ public class AppModel {
 
 	}
 
-	public boolean checkLogin(String userName, String password) {
+	public boolean checkLogin(String userName, String password,  Activity a) {
 		// check here for login info
 		// send it to server for confirmation
+		String reply = callServer("login:" + userName.trim() + "," + password.trim());
 
-
-		if (callServer("login:" + userName.trim() + "," + password.trim()).equals("done")) {
+		if (reply.equals("done")) {
 			return true;
+		} else if(reply.equals("error")){
+			doToast("UserName and Password were incorrect\nPlease try again", a);
+			return false;
+		} else if(reply.equals("error:noInet") || reply.equals("error:noServer")){
+			doToast("there was an issue connection\n" +
+    				"the the server. Please check \n" +
+    				"your internet connection and \n" +
+    				"try again.", a);
+			return false;
 		}
+		
 		return false;
+	
 	}
 
 	/**
@@ -126,11 +150,44 @@ public class AppModel {
 	}
 	
 	
+	/**
+	 * this method is synchronized. it calls the server and gets a
+	 * reply from it. it is synchronized to make sure that the 
+	 * multiple threads calling the server dont get each others 
+	 * replys from the server 
+	 * 
+	 * 
+	 * ISSUE: need to add checks here to make sure that the 
+	 * server is alive and that there is an Internet connection 
+	 * 
+	 * 
+	 * @param msg the msg to be sent to the server 
+	 * @return the reply from the server
+	 */
 	private synchronized String callServer(String msg) {
-		sendMsg(msg);
-	
-		return getReply();
-		
+		if(!isConnectedToInet()){
+			return "error:noInet";
+		}else if(socket == null || !socket.isConnected()) {
+			return "error:noServer";
+		} else {
+			sendMsg(msg);			
+			return getReply();
+		}	
+	}
+
+	/**
+	 * this checks if the device is connected to the internet 
+	 * 
+	 * @return if the device is connected to the internet 
+	 */
+	private boolean isConnectedToInet() {
+
+		NetworkInfo netInfo = connectMan.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
+
 	}
 
 	private String getReply() {
@@ -265,23 +322,36 @@ public class AppModel {
 		
 	}
 
-	public boolean makeNewUser(String user, String pass, String email) {
+	public boolean makeNewUser(String user, String pass, String email, Activity a) {
 		
 		
 		String reply = callServer("newUser:" + user + "," + pass + "," + email);
 		
-		if(reply.equals("done")) {
+		
+		if (reply.equals("done")) {
 			return true;
+		} else if(reply.equals("error")){
+			doToast("UserName, Password, or email were incorrect\nPlease try again", a);
+			return false;
+		} else if(reply.equals("error:noInet") || reply.equals("error:noServer")){
+			doToast("there was an issue connection\n" +
+    				"the the server. Please check \n" +
+    				"your internet connection and \n" +
+    				"try again.", a);
+			return false;
 		}
+		
 		return false;
 	}
+	
+	
 
 
 
 	public void doToast(String msg, Activity a) {
 		Context context = a.getApplicationContext();
 		CharSequence text = msg;
-		int duration = Toast.LENGTH_SHORT;
+		int duration = Toast.LENGTH_LONG;
 		Toast toast = Toast.makeText(context, text, duration);
       
 		toast.show();
@@ -389,6 +459,10 @@ public class AppModel {
 	public void quitGame() {
 		callServer("quit");
 		
+	}
+
+	public void setConnectMan(ConnectivityManager connectMan) {
+		this.connectMan = connectMan;
 	}
 	
 	
