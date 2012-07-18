@@ -119,10 +119,22 @@ public class DrawingView extends View{
 							  n.tileX * hStep + hStep + buffer, 
 							  n.tileY * vStep + vStep - buffer + topBuffer);
     	
-		if(n.active) {
-			paint.setColor(Color.RED);			
+		if(n.owner == model.getUserID()) {
+			System.out.println("MINE");
+			if(n.active) {
+				paint.setColor(Color.RED);
+			} else {
+				paint.setColor(Color.MAGENTA);
+			}
+					
+		} else if(n.active){
+			
+			
+				paint.setColor(Color.BLUE);
+			
+			
 		} else {
-			paint.setColor(Color.GRAY);
+			paint.setColor(Color.LTGRAY);
 		}
 		
 		canvas.drawOval(oval, paint);
@@ -130,7 +142,7 @@ public class DrawingView extends View{
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(20);
     	
-    	canvas.drawText(String.valueOf(n.owner), oval.centerX(), oval.centerY(), paint);
+    	//canvas.drawText(String.valueOf(n.owner), oval.centerX(), oval.centerY(), paint);
     	
     	
     	screenBoard.put(oval, n.nodeID);
