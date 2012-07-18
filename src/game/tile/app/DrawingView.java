@@ -61,38 +61,63 @@ public class DrawingView extends View{
 	protected void onDraw(Canvas canvas) {
 		TileGameState s = (TileGameState) state;
 		
-		//int buffer = 
+		int topBuffer = 30 ;
 		
 		
 		int h = this.getWidth();
 		int w = this.getHeight();
 		
 		int hStep = h / s.height + 1;
-		int vStep = w / s.width + 1;
+		int vStep = (w - topBuffer * 2)/ s.width + 1;
+		
+		 Paint paint = new Paint();
+	        
+	     
+	     paint.setTextSize(30);
+		
+	     int printBuffer = 1;
+	     
+	     System.out.println("about to print the scores");
+	     for(int p : s.players) {
+	    	 System.out.println("drawingScore: " + p);
+	    	 
+	    	 if(p == model.getUserID()) {
+	    		 paint.setColor(Color.RED);
+		    	 canvas.drawText(model.getUserName() + ": " + s.scores.get(p), printBuffer, topBuffer, paint);
+		 	    
+	    	 } else  {
+	    		 paint.setColor(Color.BLUE);
+		    	 canvas.drawText(model.getOpName() + ": " + s.scores.get(p), printBuffer, topBuffer, paint);
+
+	    	 }
+	    		 
+	    	 
+	    	 printBuffer+=200;
+	     }
+		
 		
 		for(TileNode n : s.tiles.values()) {
 			
 			
 			
-			drawNode(n, canvas, hStep, vStep);
+			drawNode(s, n, canvas, hStep, vStep, topBuffer);
 			
 		}
 		
 		
 	}
 
-    private void drawNode(TileNode n, Canvas canvas, int hStep, int vStep) {
+    private void drawNode(TileGameState s, TileNode n, Canvas canvas, int hStep, int vStep, int topBuffer) {
         Paint paint = new Paint();
         
         paint.setColor(Color.RED);
       
-    	
     	int buffer = 10;
     	
 		RectF oval = new RectF(n.tileX * hStep - buffer, 
-							  n.tileY * vStep + buffer, 
+							  n.tileY * vStep + buffer+ topBuffer, 
 							  n.tileX * hStep + hStep + buffer, 
-							  n.tileY * vStep + vStep- buffer);
+							  n.tileY * vStep + vStep - buffer + topBuffer);
     	
 		if(n.active) {
 			paint.setColor(Color.RED);			
@@ -106,6 +131,8 @@ public class DrawingView extends View{
 		paint.setTextSize(20);
     	
     	canvas.drawText(String.valueOf(n.owner), oval.centerX(), oval.centerY(), paint);
+    	
+    	
     	screenBoard.put(oval, n.nodeID);
     	
 

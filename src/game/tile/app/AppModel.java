@@ -36,8 +36,12 @@ public class AppModel {
 	private String gameName = "tileGame";
 
 	private String userName;
+	private int userID;
+	
+	private String opName;
 
 	HashMap<Integer, String> games;
+	HashMap<String, Integer> users;
 
 	private GameModel gameModel = new TileModel();
 	private int gameID;
@@ -166,7 +170,8 @@ public class AppModel {
 
 	public void getGames() {
 		games = new HashMap<Integer, String>();
-
+		users = new HashMap<String, Integer>();
+		
 		sendMsg("getGames");
 
 		String[] string = getReply().split(":");
@@ -182,10 +187,14 @@ public class AppModel {
 
 				for (int i = 1; i < players.length; i++) {
 
-					String user = players[i].split("-")[0];
+					String[] user = players[i].split("-");
 
-					if (!user.equals(userName)) {
-						games.put(gameID, user);
+					
+					
+					if (!user[0].equals(userName)) {
+						games.put(gameID, user[0]);
+					} else {
+						userID = Integer.valueOf(user[1]);
 					}
 				}
 
@@ -328,6 +337,29 @@ public class AppModel {
 			return true;
 		}
 		return false;
+	}
+
+	public int getGameID() {
+		return gameID;
+	}
+
+	public int getUserID() {
+		// TODO Auto-generated method stub
+		return userID;
+	}
+
+	public void setUserID(int s) {
+		// TODO Auto-generated method stub
+		userID = s;
+		
+	}
+
+	public String getOpName() {
+		return opName;
+	}
+
+	public void setOpName(String opName) {
+		this.opName = opName;
 	}
 	
 	

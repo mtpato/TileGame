@@ -13,6 +13,7 @@ public class GameBoardActivity extends Activity{
 	private AppModel model;
 	private int gameID;
 	private GameState state;
+	private String opName;
 
 
 	/**
@@ -23,13 +24,17 @@ public class GameBoardActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_board);
 
+		Bundle b = this.getIntent().getExtras();
+		
 		model = new AppModel();
 		model.setSocket(SocketHolder.getS());
-		model.setUserName((String) this.getIntent().getExtras().get("userName"));
-
+		model.setUserName((String) b.get("userName"));
+		model.setUserID(b.getInt("userID"));
+		
+		model.setOpName((String) b.get("opName"));
 		model.initIO();
 
-		gameID = Integer.valueOf(this.getIntent().getExtras().get("game").toString());
+		gameID = Integer.valueOf(b.get("game").toString());
 		
 		run();
 	}

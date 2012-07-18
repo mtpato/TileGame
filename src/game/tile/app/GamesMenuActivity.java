@@ -108,9 +108,11 @@ public class GamesMenuActivity extends Activity{
     	
         i.putExtra("socket", true);
         i.putExtra("userName", model.getUserName());
+        i.putExtra("userID", model.getUserID());
         String[] temp = ((Button)v).getText().toString().split(":");
         
         i.putExtra("game", temp[0]);
+        i.putExtra("opName", temp[1]);
         startActivity(i);
 		
 	}
