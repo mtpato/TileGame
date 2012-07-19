@@ -109,12 +109,9 @@ public class AppModel {
 		String[] splitReply = reply.split(":");
 		
 		if (splitReply[0].equals("done")) {
-			saveAuthKey(splitReply[1], a);
+			savePref("authKey", splitReply[1], a);
+			savePref("userName", userName.trim(), a);
 			
-			/*SharedPreferences prefs = a.getPreferences(1);
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.p
-			*/
 			
 			return true;
 		} else if(splitReply[0].equals("error")){
@@ -137,10 +134,12 @@ public class AppModel {
 	
 	}
 
-	private void saveAuthKey(String authKey, Activity a) {
-		SharedPreferences prefs = a.getPreferences(1);
+
+
+	private void savePref(String key, String value, Activity a) {
+		SharedPreferences prefs = a.getSharedPreferences(TileGameActivity.PREF_NAME, 1);
 		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString("authKey", authKey);
+		editor.putString(key, value);
 		editor.commit();
 		
 	}
@@ -317,15 +316,11 @@ public class AppModel {
 
 	public void drawBoard(GameState state, DrawingView v) {
 
-		
-
-	
 
 		v.setGameState(state);
 		
 		v.invalidate();
 
-		//gameModel.printState(state);
 
 	}
 
@@ -477,9 +472,10 @@ public class AppModel {
 
 	public void signOut(Activity a) {
 		
-		SharedPreferences prefs = a.getPreferences(1);
+		SharedPreferences prefs = a.getSharedPreferences(TileGameActivity.PREF_NAME, 1);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove("authKey");
+		editor.remove("userName");
 		editor.commit();
 		
 		callServer("signOut");
@@ -493,6 +489,20 @@ public class AppModel {
 
 	public void setConnectMan(ConnectivityManager connectMan) {
 		this.connectMan = connectMan;
+	}
+
+	public boolean keyLogin(Activity a) {
+		SharedPreferences prefs = a.getSharedPreferences(TileGameActivity.PREF_NAME, 1);
+		if(prefs.contains("userName") && prefs.contains("authKey")) {
+			String reply = callServer("keyLogin:" + prefs.getString("userName", "fail") + "," + prefs.getString("authKey", "fail"));
+			
+			if(reply.equals("done")) {
+				return true;
+			}
+			
+		} 
+			return false;
+
 	}
 	
 	
