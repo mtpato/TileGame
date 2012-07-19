@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,6 +27,7 @@ import android.widget.Toast;
  * 
  */
 public class AppModel {
+	
 
 	// Communication
 	private BufferedReader in;
@@ -104,21 +106,43 @@ public class AppModel {
 		// send it to server for confirmation
 		String reply = callServer("login:" + userName.trim() + "," + password.trim());
 
-		if (reply.equals("done")) {
+		String[] splitReply = reply.split(":");
+		
+		if (splitReply[0].equals("done")) {
+			saveAuthKey(splitReply[1], a);
+			
+			/*SharedPreferences prefs = a.getPreferences(1);
+			SharedPreferences.Editor editor = prefs.edit();
+			editor.p
+			*/
+			
 			return true;
-		} else if(reply.equals("error")){
-			doToast("UserName and Password were incorrect\nPlease try again", a);
-			return false;
-		} else if(reply.equals("error:noInet") || reply.equals("error:noServer")){
-			doToast("there was an issue connection\n" +
-    				"the the server. Please check \n" +
-    				"your internet connection and \n" +
-    				"try again.", a);
-			return false;
-		}
+		} else if(splitReply[0].equals("error")){
+			if(splitReply.length == 1) {
+				doToast("UserName and Password were incorrect\nPlease try again", a);
+				return false;
+			}else if(splitReply[1].equals("noInet") || splitReply[1].equals("noServer")){
+				doToast("there was an issue connection\n" +
+	    				"the the server. Please check \n" +
+	    				"your internet connection and \n" +
+	    				"try again.", a);
+				return false;
+			}
+			
+			
+		} 
+		
 		
 		return false;
 	
+	}
+
+	private void saveAuthKey(String authKey, Activity a) {
+		SharedPreferences prefs = a.getPreferences(1);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("authKey", authKey);
+		editor.commit();
+		
 	}
 
 	/**
@@ -451,7 +475,13 @@ public class AppModel {
 		return true;
 	}
 
-	public void signOut() {
+	public void signOut(Activity a) {
+		
+		SharedPreferences prefs = a.getPreferences(1);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove("authKey");
+		editor.commit();
+		
 		callServer("signOut");
 		
 	}

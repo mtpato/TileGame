@@ -195,7 +195,7 @@ public class GamesMenuActivity extends Activity{
 		 * setResult(RESULT_OK, data);
 		 */
 
-		model.signOut();
+		model.signOut(this);
 
 		finish();
 	}
