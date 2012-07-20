@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+     <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SPLASH SCREEN"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+<!-- 
+    <Button
+        android:id="@+id/cancelButtonClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="cancelButtonClick"
+        android:text="Cancel" />
+    
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="refreshButtonClick"
+        android:text="refresh" />
+
+    <game.tile.app.DrawingView
+        android:id="@+id/boardLayout"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+    </game.tile.app.DrawingView> -->
+
+</LinearLayout>
