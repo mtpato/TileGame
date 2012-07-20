@@ -524,8 +524,9 @@ public class AppModel {
 		}
 		
 		//this only habdles 2 player
-		
-		if(winID == userID) {
+		if(tie) {
+			return "TIE";
+		} else if(winID == userID) {
 			return userName;
 		} else {
 			return opName;

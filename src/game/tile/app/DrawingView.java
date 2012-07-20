@@ -66,11 +66,11 @@ public class DrawingView extends View{
 		int topBuffer = 30 ;
 		
 		
-		int h = this.getWidth();
-		int w = this.getHeight();
+		int w = this.getWidth();
+		int h = this.getHeight();
 		
-		int hStep = h / s.height + 1;
-		int vStep = (w - topBuffer * 2)/ s.width + 1;
+		int hStep = w / s.height + 1;
+		int vStep = (h - topBuffer * 2)/ s.width + 1;
 		
 		 Paint paint = new Paint();
 	        
@@ -117,9 +117,9 @@ public class DrawingView extends View{
 		
 		if(s.over) {
 			paint.setTextScaleX(2);
-			
+			paint.setColor(Color.WHITE);
 			String winner = model.getWinner(s);
-
+			canvas.drawText("WINNER " + winner + "!", 25, h/2, paint);
 			
 		}
 		
