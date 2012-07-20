@@ -40,13 +40,33 @@ public class TileModel extends GameModel{
 		}
 		
 		drawTile(s, moveNode.owner);
-
+		
+		switchTurn(s);
 		
 		//check if the game is over 
 		
 		if(isOver(s)) s.over = true;
 		
 		return s;
+	}
+
+
+
+	/**
+	 * this switches the turn to the next player
+	 * 
+	 * ISSUE: this only works for a 2 player game right now 
+	 * 
+	 * @param s
+	 */
+	private void switchTurn(TileGameState s) {
+		for(int p: s.players) {
+			if(p != s.turn) {
+				s.turn = p;
+				break;
+			}
+		}
+		
 	}
 
 
@@ -92,19 +112,17 @@ public class TileModel extends GameModel{
 		TileGameState s = (TileGameState) state;
 		
 		
-		int totalScore = 0;
-		
-		for(int points: s.scores.values()) {
-			totalScore = totalScore + points;
-		}
-		
-		if(totalScore == s.tiles.size()){
-			return true;
+		for(TileNode t: s.tiles.values()) {
+			if(!t.active) {
+				return false;
+			}
+			
+			
 		}
 
 		
 		
-		return false;
+		return true;
 	}
 
 	@Override
