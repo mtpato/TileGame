@@ -504,6 +504,33 @@ public class AppModel {
 			return false;
 
 	}
+
+	public String getWinner(TileGameState s) {
+		boolean tie = false;
+		
+		int maxScore = -1;
+		int winID = -1;
+		int curScore;
+		
+		for(int p: s.scores.keySet()) {
+			curScore = s.scores.get(p);
+			if(curScore == maxScore) {
+				tie = true;
+			} else if (curScore > maxScore) {
+				maxScore = curScore;
+				winID = p;
+			}
+
+		}
+		
+		//this only habdles 2 player
+		
+		if(winID == userID) {
+			return userName;
+		} else {
+			return opName;
+		}
+	}
 	
 	
 	

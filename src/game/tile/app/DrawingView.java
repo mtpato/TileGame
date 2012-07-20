@@ -109,10 +109,17 @@ public class DrawingView extends View{
 		
 		
 		for(TileNode n : s.tiles.values()) {
-			
-			
-			
+		
 			drawNode(s, n, canvas, hStep, vStep, topBuffer);
+			
+		}
+		
+		
+		if(s.over) {
+			paint.setTextScaleX(2);
+			
+			String winner = model.getWinner(s);
+
 			
 		}
 		
