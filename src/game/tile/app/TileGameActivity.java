@@ -37,7 +37,7 @@ public class TileGameActivity extends Activity {
          
         
         
-        run();
+       // run();
     }
     
     

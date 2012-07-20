@@ -23,7 +23,7 @@ public class SplashActivity extends Activity {
 	
 	AppModel model;
 	
-	private boolean appStarted = false;
+	private String appState = "start";
 	
     /** Called when the activity is first created. */
     @Override
@@ -74,7 +74,7 @@ public class SplashActivity extends Activity {
         		
         		timerHandler.postDelayed(this, 2000);
         	} else {
-        		startTileGameActivity();
+        		startGame();
         	}
     		
     			
@@ -95,9 +95,38 @@ public class SplashActivity extends Activity {
 		}
 
 	}
+	
+	protected void startGame() {
+    	if(model.keyLogin(this)) {
+    		SharedPreferences prefs = getSharedPreferences(TileGameActivity.PREF_NAME, 1);
+    		
+    		startUpGamesMenuActivity( prefs.getString("userName", "fail"));
+    		
+    		
+    	} else {
+    		startTileGameActivity();
+    	}
+	}
+	
+	private void startUpGamesMenuActivity(String userName) {
+		appState = "gamesMenu";
+		
+		model.setUserName(userName);
+		
+		Intent gamesMenu = new Intent(SplashActivity.this, GamesMenuActivity.class);
+			
+		//put the i/o in to the IOholder for passing
+
+		SocketHolder.setS(model.getSocket());
+		
+		
+		gamesMenu.putExtra("socket", true);
+		gamesMenu.putExtra("userName", model.getUserName());
+		startActivity(gamesMenu);
+	}
 
 	protected void startTileGameActivity() {
-		appStarted = true;
+		appState = "login"; //set to app started 
 		
 		Intent gamesMenu = new Intent(SplashActivity.this, TileGameActivity.class);
 		
@@ -120,8 +149,10 @@ public class SplashActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        if(appStarted) {
+        if(appState.equals("login")) {
         	finish();
+        } else if(appState.equals("gamesMenu")){
+        	startGame();
         }
        
         
