@@ -5,7 +5,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -85,10 +87,12 @@ public class AppModel {
 	}
 
 	private Socket connectToServer(String hostname, int port) {
-		Socket s = null;
-
+		Socket s = new Socket();
+		SocketAddress sockaddr = new InetSocketAddress(hostname, port);
+		
+		
 		try {
-			s = new Socket(hostname, port);
+			s.connect(sockaddr, 2000);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -100,6 +104,8 @@ public class AppModel {
 		return s;
 
 	}
+	
+	
 
 	public boolean checkLogin(String userName, String password,  Activity a) {
 		// check here for login info
@@ -532,6 +538,8 @@ public class AppModel {
 			return opName;
 		}
 	}
+	
+	
 	
 	
 	

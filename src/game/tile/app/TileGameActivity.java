@@ -27,21 +27,23 @@ public class TileGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        model = new AppModel();
+        
+        // if(this.getIntent().getExtras().get("socket").equals("true")){
+         model.setSocket(SocketHolder.getS());
+   
+         model.initIO();
+         model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+         
+        
         
         run();
     }
     
     
     private void run() {
-    	model = new AppModel();
-    	model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-
-    	if(!model.init()){//keep trying this every second or whatever
-    		model.doToast("there was an issue connection\n" +
-    				"the the server. Please check \n" +
-    				"your internet connection and \n" +
-    				"try again.", this);
-    	} else if(model.keyLogin(this)) {
+    	
+    	if(model.keyLogin(this)) {
     		SharedPreferences prefs = getSharedPreferences(TileGameActivity.PREF_NAME, 1);
     		
     		startUpGamesMenuActivity( prefs.getString("userName", "fail"));
@@ -70,23 +72,24 @@ public class TileGameActivity extends Activity {
     		newUser.putExtra("socket", false);
     	}
     	
-    	
-        
-        //graph.putExtra("statsTime", model.getStatsTime());
-        startActivity(newUser);
-    }
-    
-    public void quitButtonClick(View view) {
-    	model.quitGame();
-       finish();
-    }
-    
-    
-    public void loginButtonClick(View view) {
-        System.out.println("newUserClick");
-        TextView userView = (TextView) findViewById(R.id.userField);
-        TextView passwordView = (TextView) findViewById(R.id.passwordField);
-        
+		// graph.putExtra("statsTime", model.getStatsTime());
+		startActivity(newUser);
+	}
+
+	public void quitButtonClick(View view) {
+		model.quitGame();
+
+		//Intent i = new Intent(this, SplashActivity.class);
+		//i.putExtra("quit", "true");
+		
+		
+		finish();
+	}
+
+	public void loginButtonClick(View view) {
+		System.out.println("newUserClick");
+		TextView userView = (TextView) findViewById(R.id.userField);
+		TextView passwordView = (TextView) findViewById(R.id.passwordField);
         
         
         if(model.checkLogin(userView.getText().toString(),passwordView.getText().toString(), this)) {
