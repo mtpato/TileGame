@@ -30,15 +30,19 @@ public class GamesMenuActivity extends Activity{
         setContentView(R.layout.games_menu);
 
         model = new AppModel();
+        model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
         
        // if(this.getIntent().getExtras().get("socket").equals("true")){
         model.setSocket(SocketHolder.getS());
         model.setUserName((String) this.getIntent().getExtras().get("userName"));
         
-        model.initIO();
-        model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-        
         buttons = new HashSet<Button>();
+       
+        if(!model.initIO()) {
+        	finish();
+        }
+  
+       
         
 
        
@@ -67,9 +71,13 @@ public class GamesMenuActivity extends Activity{
     
     
    private void run() {
-	   	model.getGames();
+	   	if(model.getGames()) {
+	   		displayGames();
+	   	} else {
+	   		finish();
+	   	}
 	   	
-		displayGames();
+		
 
 	}
 
@@ -200,6 +208,14 @@ public class GamesMenuActivity extends Activity{
 		finish();
 	}
 	
+	
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	System.out.println("Destroy: GAMESMENU");
+
+    	
+    }
 
     
 }

@@ -18,31 +18,31 @@ import android.widget.Toast;
 public class TileGameActivity extends Activity {
 	
 	public static final String PREF_NAME = "tilePrefs";
-	
+
 	AppModel model;
-	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        model = new AppModel();
-        
-        // if(this.getIntent().getExtras().get("socket").equals("true")){
-         model.setSocket(SocketHolder.getS());
-   
-         model.initIO();
-         model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-         
-        
-        
-       // run();
-    }
-    
-    
-    private void run() {
-    	
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		model = new AppModel();
+		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+
+		// if(this.getIntent().getExtras().get("socket").equals("true")){
+		model.setSocket(SocketHolder.getS());
+
+	       
+        if(!model.initIO()) {
+        	finish();
+        }
+
+		// run();
+	}
+
+	private void run() {
+
     	if(model.keyLogin(this)) {
     		SharedPreferences prefs = getSharedPreferences(TileGameActivity.PREF_NAME, 1);
     		
@@ -121,6 +121,14 @@ public class TileGameActivity extends Activity {
 		gamesMenu.putExtra("userName", model.getUserName());
 		startActivity(gamesMenu);
 	}
+	
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	System.out.println("Destroy: LOGIN");
+
+    	
+    }
 
 
 

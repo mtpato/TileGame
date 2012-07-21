@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -105,6 +106,56 @@ public class AppModel {
 
 	}
 	
+    /**
+     *  this is the handler for the Runnable for the timer
+     */
+    public Handler timerHandler = new Handler();
+
+    
+
+    /**
+     * this function initiates the runnable for the handler
+     */
+    public void conTimer() {
+        
+        timerHandler.removeCallbacks(getConTimer);
+        timerHandler.postDelayed(getConTimer, 1000);
+
+    }
+    
+
+    /**
+     * 
+     */
+    private Runnable getConTimer = new Runnable() {
+    	public void run() {
+
+        	if(!tryConnent()){//keep trying this every second or whatever
+        		
+        		timerHandler.postDelayed(this, 2000);
+        	} else {
+        		SocketHolder.setS(socket);
+        	}
+    		
+    			
+    		    
+    		
+    	}		
+	};
+
+	public boolean tryConnent() {
+		if (!init()) {// keep trying this every second or whatever
+			/*doToast("there was an issue connection\n"
+					+ "the the server. Please check \n"
+					+ "your internet connection and \n" + "try again.", this);
+			*/
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+	
 	
 
 	public boolean checkLogin(String userName, String password,  Activity a) {
@@ -129,6 +180,7 @@ public class AppModel {
 	    				"the the server. Please check \n" +
 	    				"your internet connection and \n" +
 	    				"try again.", a);
+				
 				return false;
 			}
 			
@@ -153,29 +205,38 @@ public class AppModel {
 	/**
 	 * 
 	 */
-	public void initIO() {
+	public boolean initIO() {
 		// log = new ErrorLogger("errorLog.txt", this.getClass().toString());//
 		// init
 		// the
 		// error
 		// logger
-		try {
-			in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-		} catch (IOException e) {
-			// log.log("problem creating the input buffer trace: " +
-			// e.toString());
-			e.printStackTrace();
-		}
-		try {
-			out = new BufferedWriter(new OutputStreamWriter(
-					socket.getOutputStream()));
-		} catch (IOException e) {
-			// log.log("problem creating the output buffer trace: " +
-			// e.toString());
+		
+		
+		if (isConnectedToInet() && socket != null && socket.isConnected()) {
+			try {
+				in = new BufferedReader(new InputStreamReader(
+						socket.getInputStream()));
+			} catch (IOException e) {
+				// log.log("problem creating the input buffer trace: " +
+				// e.toString());
+				e.printStackTrace();
+			}
+			try {
+				out = new BufferedWriter(new OutputStreamWriter(
+						socket.getOutputStream()));
+			} catch (IOException e) {
+				// log.log("problem creating the output buffer trace: " +
+				// e.toString());
 
-			e.printStackTrace();
+				e.printStackTrace();
+			}
+			
+			return true;
+		} else {
+			return false;
 		}
+		
 	}
 	
 	
@@ -260,7 +321,7 @@ public class AppModel {
 		}
 	}
 
-	public void getGames() {
+	public boolean getGames() {
 		games = new HashMap<Integer, String>();
 		users = new HashMap<String, Integer>();
 		
@@ -268,8 +329,8 @@ public class AppModel {
 
 		String[] string = callServer("getGames").split(":");
 
-		
-		if(string.length > 1) {
+		if (string[0].equals("games")) {
+
 			String[] gamesStrings = string[1].split(",");
 
 			for (String g : gamesStrings) {
@@ -281,8 +342,6 @@ public class AppModel {
 
 					String[] user = players[i].split("-");
 
-					
-					
 					if (!user[0].equals(userName)) {
 						games.put(gameID, user[0]);
 					} else {
@@ -291,7 +350,15 @@ public class AppModel {
 				}
 
 			}
+			return true;
+
+		} else if(string[0].equals("error")){		
+			return false;
+		} else {
+			return false;
 		}
+		
+
 
 	}
 
@@ -315,9 +382,19 @@ public class AppModel {
 		
 
 		String compState = callServer("gameState:" + gameID);
-
-		System.out.println(compState);
-		return gameModel.parseGameState(compState.split(":")[1]);
+		
+		String[] split = compState.split(":");
+		
+		if(split[0].equals("error")) {
+			
+			return null;
+		} else if(split[0].equals("state")) {
+			return gameModel.parseGameState(split[1]);
+		} else {
+			return null;
+		}
+		
+	
 	}
 
 	public void drawBoard(GameState state, DrawingView v) {
@@ -340,7 +417,7 @@ public class AppModel {
 
 		String compState = callServer("makeMove:" + gameID + "," + nodeID);
 
-		System.out.println(compState);
+		//System.out.println(compState);
 		
 		drawBoard(gameModel.parseGameState(compState), v);
 		

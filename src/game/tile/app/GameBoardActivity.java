@@ -34,20 +34,27 @@ public class GameBoardActivity extends Activity{
 		Bundle b = this.getIntent().getExtras();
 		
 		model = new AppModel();
+		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
+		
+		
 		model.setSocket(SocketHolder.getS());
 		model.setUserName((String) b.get("userName"));
 		model.setUserID(b.getInt("userID"));
 		
 		model.setOpName((String) b.get("opName"));
-		model.initIO();
-		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
 		
 		
+	    System.out.println("befor init model");   
+        if(!model.initIO()) {
+        	finish();
+        }
+        System.out.println("after init model"); 
+	
 		gameID = Integer.valueOf(b.get("game").toString());
 		
 		
 		
-		timer();
+		//timer();
 		runBoard();
 	}
     
@@ -55,12 +62,21 @@ public class GameBoardActivity extends Activity{
     private void runBoard() {
     	state = model.getState(String.valueOf(gameID));
     	
-    	DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
-    	
-    	v.setModel(model);
-    	model.setGameID(gameID);
-		model.drawBoard(state, v);
-		
+    	if(state != null) {
+    		System.out.println("GOODDDDD-----------");
+        	DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
+        	
+        	v.setModel(model);
+        	model.setGameID(gameID);
+    		model.drawBoard(state, v);
+    		
+    	} else {
+    		System.out.println("FAILLLLLL-----------");
+    		finish();
+    		
+    	}
+
+    	System.out.println("after drawing");
 		
 		 
 
@@ -80,7 +96,7 @@ public class GameBoardActivity extends Activity{
     public void timer() {
         
         timerHandler.removeCallbacks(getStateTimer);
-        timerHandler.postDelayed(getStateTimer, 1000);
+        timerHandler.postDelayed(getStateTimer, 2000);
 
     }
     
@@ -92,7 +108,7 @@ public class GameBoardActivity extends Activity{
     	public void run() {
 
     			runBoard();
-    		    timerHandler.postDelayed(this, 1000);
+    		    timerHandler.postDelayed(this, 2000);
     		
     	}		
     };	
@@ -121,6 +137,7 @@ public class GameBoardActivity extends Activity{
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	System.out.println("Destroy: GAME BOARD");
     	
     	timerHandler.removeCallbacks(getStateTimer);
     	

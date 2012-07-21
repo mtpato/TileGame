@@ -157,6 +157,14 @@ public class SplashActivity extends Activity {
        
         
     }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+    	System.out.println("Destroy: SPLASH");
+
+    	
+    }
 	
 
 }

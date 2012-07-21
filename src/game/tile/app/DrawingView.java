@@ -79,9 +79,9 @@ public class DrawingView extends View{
 		
 	     int printBuffer = 1;
 	     
-	     System.out.println("about to print the scores");
+	     //System.out.println("about to print the scores");
 	     for(int p : s.players) {
-	    	 System.out.println("drawingScore: " + p);
+	    	 //System.out.println("drawingScore: " + p);
 	    	 paint.setTextScaleX(1);
 	    	 if(p == model.getUserID()) {
 	    		 if(p == s.turn) {
