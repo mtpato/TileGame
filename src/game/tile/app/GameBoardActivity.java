@@ -36,34 +36,46 @@ public class GameBoardActivity extends Activity{
 		model = new AppModel();
 		model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
 		
-		
-		model.setSocket(SocketHolder.getS());
 		model.setUserName((String) b.get("userName"));
 		model.setUserID(b.getInt("userID"));
 		
 		model.setOpName((String) b.get("opName"));
-		
-		
-	    System.out.println("befor init model");   
-        if(!model.initIO()) {
-        	finish();
-        }
-        System.out.println("after init model"); 
-	
 		gameID = Integer.valueOf(b.get("game").toString());
 		
-		
-		
-		//timer();
-		runBoard();
+
 	}
+	
+	 @Override
+	    public void onResume() {
+	        super.onResume();
+	        
+			model.setSocket(SocketHolder.getS());
+
+			
+			
+		   // System.out.println("befor init model");   
+	        if(!model.initIO()) {
+	       // 	System.out.println("didnt init");
+	        	finish();
+	        } else {
+	        	//System.out.println("inited IO");
+	        }
+	       // System.out.println("after init model"); 
+		
+
+			timer();
+			runBoard();
+	        
+	    }
     
     
     private void runBoard() {
+    	//System.out.println("in run board");
     	state = model.getState(String.valueOf(gameID));
+    	//System.out.println("after gettign state");
     	
     	if(state != null) {
-    		System.out.println("GOODDDDD-----------");
+    		//System.out.println("GOODDDDD-----------");
         	DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
         	
         	v.setModel(model);
@@ -71,12 +83,12 @@ public class GameBoardActivity extends Activity{
     		model.drawBoard(state, v);
     		
     	} else {
-    		System.out.println("FAILLLLLL-----------");
+    		//System.out.println("FAILLLLLL-----------");
     		finish();
     		
     	}
 
-    	System.out.println("after drawing");
+    	//System.out.println("after drawing");
 		
 		 
 

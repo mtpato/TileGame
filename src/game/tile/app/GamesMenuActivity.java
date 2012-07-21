@@ -39,6 +39,9 @@ public class GamesMenuActivity extends Activity{
         buttons = new HashSet<Button>();
        
         if(!model.initIO()) {
+        	Intent intent=new Intent();
+            intent.putExtra("msg", "noInet");
+            setResult(RESULT_OK, intent);
         	finish();
         }
   
@@ -74,6 +77,9 @@ public class GamesMenuActivity extends Activity{
 	   	if(model.getGames()) {
 	   		displayGames();
 	   	} else {
+        	Intent intent=new Intent();
+            intent.putExtra("msg", "noInet");
+            setResult(RESULT_OK, intent);
 	   		finish();
 	   	}
 	   	

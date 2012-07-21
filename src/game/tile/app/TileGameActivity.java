@@ -35,11 +35,30 @@ public class TileGameActivity extends Activity {
 
 	       
         if(!model.initIO()) {
+        	Intent intent=new Intent();
+            intent.putExtra("msg", "noInet");
+            setResult(RESULT_OK, intent);
         	finish();
         }
 
 		// run();
 	}
+	
+	 @Override
+	    public void onResume() {
+	        super.onResume();
+	        
+			model.setSocket(SocketHolder.getS());
+
+		       
+	        if(!model.initIO()) {
+	    		Intent intent=new Intent();
+	            intent.putExtra("msg", "noInet");
+	            setResult(RESULT_OK, intent);
+	        	finish();
+	        }
+	        
+	    }
 
 	private void run() {
 
@@ -82,6 +101,9 @@ public class TileGameActivity extends Activity {
 		//Intent i = new Intent(this, SplashActivity.class);
 		//i.putExtra("quit", "true");
 		
+		Intent intent=new Intent();
+        intent.putExtra("msg", "quit");
+        setResult(RESULT_OK, intent);
 		
 		finish();
 	}
@@ -125,10 +147,13 @@ public class TileGameActivity extends Activity {
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	
+    	
     	System.out.println("Destroy: LOGIN");
 
     	
     }
+    
 
 
 

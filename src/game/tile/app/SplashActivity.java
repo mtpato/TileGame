@@ -122,7 +122,7 @@ public class SplashActivity extends Activity {
 		
 		gamesMenu.putExtra("socket", true);
 		gamesMenu.putExtra("userName", model.getUserName());
-		startActivity(gamesMenu);
+		startActivityForResult(gamesMenu, 2);
 	}
 
 	protected void startTileGameActivity() {
@@ -137,23 +137,44 @@ public class SplashActivity extends Activity {
 		
 		gamesMenu.putExtra("socket", true);
 		gamesMenu.putExtra("userName", model.getUserName());
-		startActivity(gamesMenu);
+		startActivityForResult(gamesMenu, 1);
 		
 		
 
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		String msg = data.getStringExtra("msg");
+
+		System.out.println(msg);
+		if (resultCode == 1) {
+			if (msg.equals("quit")) {
+				finish();
+			} else if (msg.equals("noInet")) {
+				run();
+			}
+		} else if (resultCode == 2) {
+			if (msg.equals("quit")) {
+				finish();
+			} else if (msg.equals("noInet")) {
+				run();
+			} else {
+				startGame();
+			}
+		}
+
+	}
+
 	
 	
     @Override
     public void onResume() {
         super.onResume();
 
-        if(appState.equals("login")) {
-        	finish();
-        } else if(appState.equals("gamesMenu")){
-        	startGame();
-        }
+       
        
         
     }

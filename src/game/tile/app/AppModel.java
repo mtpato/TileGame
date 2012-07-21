@@ -55,6 +55,7 @@ public class AppModel {
 	
 	private ConnectivityManager connectMan;
 
+	private boolean connected;
 
 	
 	
@@ -69,13 +70,14 @@ public class AppModel {
 				initIO();
 
 				if (!getReply().equals("done")) {
-					return init();
+					//return init();
 				}
 
 				
 				if (!callServer(gameName).equals("done")) {
 					return false;
 				}
+				connected = true;
 
 				return true;
 			}
@@ -106,55 +108,6 @@ public class AppModel {
 
 	}
 	
-    /**
-     *  this is the handler for the Runnable for the timer
-     */
-    public Handler timerHandler = new Handler();
-
-    
-
-    /**
-     * this function initiates the runnable for the handler
-     */
-    public void conTimer() {
-        
-        timerHandler.removeCallbacks(getConTimer);
-        timerHandler.postDelayed(getConTimer, 1000);
-
-    }
-    
-
-    /**
-     * 
-     */
-    private Runnable getConTimer = new Runnable() {
-    	public void run() {
-
-        	if(!tryConnent()){//keep trying this every second or whatever
-        		
-        		timerHandler.postDelayed(this, 2000);
-        	} else {
-        		SocketHolder.setS(socket);
-        	}
-    		
-    			
-    		    
-    		
-    	}		
-	};
-
-	public boolean tryConnent() {
-		if (!init()) {// keep trying this every second or whatever
-			/*doToast("there was an issue connection\n"
-					+ "the the server. Please check \n"
-					+ "your internet connection and \n" + "try again.", this);
-			*/
-			return false;
-		} else {
-			return true;
-		}
-
-	}
 	
 	
 
@@ -206,11 +159,6 @@ public class AppModel {
 	 * 
 	 */
 	public boolean initIO() {
-		// log = new ErrorLogger("errorLog.txt", this.getClass().toString());//
-		// init
-		// the
-		// error
-		// logger
 		
 		
 		if (isConnectedToInet() && socket != null && socket.isConnected()) {
@@ -234,8 +182,10 @@ public class AppModel {
 			
 			return true;
 		} else {
+
 			return false;
 		}
+
 		
 	}
 	
@@ -256,10 +206,16 @@ public class AppModel {
 	 */
 	private synchronized String callServer(String msg) {
 		if(!isConnectedToInet()){
+			System.out.println("no net");
+			
 			return "error:noInet";
 		}else if(socket == null || !socket.isConnected()) {
+			System.out.println("no socket");
+			
 			return "error:noServer";
 		} else {
+			
+			System.out.println("send Msg");
 			sendMsg(msg);			
 			return getReply();
 		}	
@@ -273,7 +229,7 @@ public class AppModel {
 	private boolean isConnectedToInet() {
 
 		NetworkInfo netInfo = connectMan.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+		if (netInfo != null && netInfo.isConnected()) {
 			return true;
 		}
 		return false;
