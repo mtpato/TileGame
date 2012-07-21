@@ -25,6 +25,8 @@ public class SplashActivity extends Activity {
 	
 	private String appState = "start";
 	
+	
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class SplashActivity extends Activity {
     private void run() {
     	model = new AppModel();
     	model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-
+    	System.out.println("attempting to set up con");
     	
     	conTimer();
     	
@@ -72,7 +74,7 @@ public class SplashActivity extends Activity {
 
         	if(!tryConnent()){//keep trying this every second or whatever
         		
-        		timerHandler.postDelayed(this, 2000);
+        		timerHandler.postDelayed(this, 4000);
         	} else {
         		startGame();
         	}
@@ -147,37 +149,28 @@ public class SplashActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		String msg = data.getStringExtra("msg");
+		appState = data.getStringExtra("msg");
 
-		System.out.println(msg);
-		if (resultCode == 1) {
-			if (msg.equals("quit")) {
-				finish();
-			} else if (msg.equals("noInet")) {
-				run();
-			}
-		} else if (resultCode == 2) {
-			if (msg.equals("quit")) {
-				finish();
-			} else if (msg.equals("noInet")) {
-				run();
-			} else {
-				startGame();
-			}
-		}
+		System.out.println(appState);
+
 
 	}
 
 	
 	
-    @Override
-    public void onResume() {
-        super.onResume();
+	@Override
+	public void onResume() {
+		super.onResume();
 
-       
-       
-        
-    }
+		if (appState.equals("quit")) {
+			finish();
+		} else if (appState.equals("noInet")) {
+			run();
+		} else {
+			startGame();
+		}
+
+	}
     
     @Override
     public void onDestroy() {

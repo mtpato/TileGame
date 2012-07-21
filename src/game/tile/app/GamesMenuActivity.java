@@ -200,14 +200,9 @@ public class GamesMenuActivity extends Activity{
 	 * @param view
 	 */
 	public void logoutButtonClick(View view) {
-		/*
-		 * Intent data = new Intent();
-		 * 
-		 * data.putExtra("celsius", celsius); data.putExtra("lowerThresh",
-		 * lowerThresh); data.putExtra("upperThresh", upperThresh);
-		 * 
-		 * setResult(RESULT_OK, data);
-		 */
+    	Intent intent=new Intent();
+        intent.putExtra("msg", "signOut");
+        setResult(RESULT_OK, intent);
 
 		model.signOut(this);
 
