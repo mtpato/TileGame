@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class GamesMenuActivity extends Activity{
 	private AppModel model;
 	private HashSet<Button> buttons;
-	
+	protected boolean demoBoard = false;
     /**
      * Called when the activity is first created.
      * */
@@ -114,8 +114,15 @@ public class GamesMenuActivity extends Activity{
 	protected void enterGame(View v) {
 		System.out.println(((Button)v).getText());
 		
-		Intent i = new Intent(GamesMenuActivity.this, GameBoardActivity.class);
-        
+		Intent i;
+		
+		if(demoBoard) {
+			i = new Intent(GamesMenuActivity.this, GameBoardActivity.class);   
+		} else {
+			i = new Intent(GamesMenuActivity.this, GameActivity.class);
+		     
+		}
+       
     	
     	
     	//put the i/o in to the IOholder for passing

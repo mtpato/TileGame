@@ -34,6 +34,10 @@
           <activity android:name=".GameBoardActivity" 
 		          android:label="@string/gameBoard">
 		</activity>
+		
+        <activity android:name=".GameActivity" 
+		   		android:label="@string/gameBoard">
+		</activity>
          
     </application>
     

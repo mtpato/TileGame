@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/cancelButtonClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="cancelButtonClick"
+        android:text="Cancel" />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <View
+            android:id="@+id/opPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_alignParentTop="true" />
+
+        <View
+            android:id="@+id/user"
+            android:layout_width="wrap_content"
+            android:layout_height="82dp"
+            android:layout_alignParentBottom="true" />
+
+        <View
+            android:id="@+id/scores"
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/user"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/opPlayer" />
+
+        <game.tile.app.BetterDrawingView
+            android:id="@+id/boardLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_above="@+id/user"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/opPlayer"
+            android:layout_toLeftOf="@+id/scores" />
+    </RelativeLayout>
+    
+     <!--     <LinearLayout
+        android:id="@+id/backGround"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1.0">
+                <View
+            android:id="@+id/oppBack"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight=".45"/>
+                <View
+            android:id="@+id/userBack"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight=".55"/>
+        
+        
+    </LinearLayout> -->
+
+</LinearLayout>
