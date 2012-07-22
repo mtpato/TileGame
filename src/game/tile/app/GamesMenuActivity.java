@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class GamesMenuActivity extends Activity{
 	private AppModel model;
 	private HashSet<Button> buttons;
-	protected boolean demoBoard = false;
+	protected boolean demoBoard = true;
     /**
      * Called when the activity is first created.
      * */
