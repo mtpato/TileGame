@@ -20,7 +20,7 @@ import android.widget.TextView;
 public class GamesMenuActivity extends Activity{
 	private AppModel model;
 	private HashSet<Button> buttons;
-	protected boolean demoBoard = true;
+	protected boolean demoBoard = false;//set weather to use the demo board 
     /**
      * Called when the activity is first created.
      * */

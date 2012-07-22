@@ -1,14 +1,23 @@
 package game.tile.app;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Picture;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +33,11 @@ public class BetterDrawingView extends DrawingView{
 	private HashMap<RectF, Integer> screenBoard = new HashMap<RectF, Integer>();
 	
 	private AppModel model;
+	
+	
+	
+	Bitmap tile;
+	
 	
 	public BetterDrawingView(Context context) {
 		super(context);
@@ -59,26 +73,53 @@ public class BetterDrawingView extends DrawingView{
 	// this method is called when the View is displayed
 	// or when Òinvalidate()Ó is called
 	protected void onDraw(Canvas canvas) {
-		buildBoardLayout();
+		Resources res = getResources();
+		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
 		
 		TileGameState s = (TileGameState) state;
 		
 		screenBoard.clear();
 		
+		
+		
+		
+		int hor = this.getWidth();
+		int ver = this.getHeight();
+		
+		//int boarder = (hor /s.height) / 2;
+		int boarder = 0;
+		
+		float hStep = (hor - boarder) / (float) s.width;
+		float vStep = (ver - boarder) / ((float) s.height / 2);
+		
+		hStep = (hor - hStep) / (float) s.width;//might be able to do better
+		vStep = (ver - vStep/2) / ((float) s.height / 2);//might be able to do better
 	
 		
+		ArrayList<TileNode> nodes = new ArrayList<TileNode>(s.tiles.values()); 
+		Collections.sort(nodes, new TileNodeComparator());
 		
-		int w = this.getWidth();
-		int h = this.getHeight();
+		for(TileNode n : nodes) {
+			
+			if(vStep < hStep) {
+				drawTileState(s, n, canvas, vStep, (hStep - vStep) * s.height, boarder, true);
+			} else {
+				drawTileState(s, n, canvas, hStep, (vStep - hStep) * s.width, boarder, false);
+			}
+			
+			
+			
+		}
 		
-		int hStep = w / s.height + 1;
-		int vStep = h/ s.width + 1;
-	
+		for(TileNode n : nodes) {
 		
-		
-		for(TileNode n : s.tiles.values()) {
-		
-			drawNode(s, n, canvas, hStep, vStep);
+			if(vStep < hStep) {
+				drawNode(s, n, canvas, vStep, (hStep - vStep) * s.height, boarder, true);
+			} else {
+				drawNode(s, n, canvas, hStep, (vStep - hStep) * s.width, boarder, false);
+			}
+			
+			
 			
 		}
 		
@@ -89,7 +130,7 @@ public class BetterDrawingView extends DrawingView{
 			paint.setTextScaleX(2);
 			paint.setColor(Color.WHITE);
 			String winner = model.getWinner(s);
-			canvas.drawText("WINNER " + winner + "!", 25, h/2, paint);
+			canvas.drawText("WINNER " + winner + "!", 25, ver/2, paint);
 			
 		}
 		
@@ -105,18 +146,62 @@ public class BetterDrawingView extends DrawingView{
 		
 	}
 
-	private void drawNode(TileGameState s, TileNode n, Canvas canvas, int hStep, int vStep) {
+	private void drawNode(TileGameState s, TileNode n, Canvas canvas, float step, float f, int boarder, boolean vIsSmaller) {
         Paint paint = new Paint();
         
         paint.setColor(Color.RED);
       
-    	int buffer = 10;
+        RectF tRect;
     	
-		RectF oval = new RectF(n.tileX * hStep - buffer, 
-							  n.tileY * vStep + buffer, 
-							  n.tileX * hStep + hStep + buffer, 
-							  n.tileY * vStep + vStep - buffer);
+        float halfStep = step / 2;
+        
+        
+        
+		tRect = new RectF(n.tileX * step,
+				 n.tileY * halfStep,
+				 (float) (n.tileX * step + step * 1.45),
+				 (float) (n.tileY * halfStep + step * 1.1));
+
+        
+        System.out.println(tRect.height() + " " + tRect.width());
+        
+  
+		
     	
+		
+		
+		canvas.drawBitmap(tile, null, tRect, paint);
+    	
+		paint.setColor(Color.GREEN);
+		
+		RectF click = new RectF((float) (tRect.centerX() - ((float) halfStep * 0.8)),
+				 tRect.centerY() - halfStep,
+				 (float) (tRect.centerX() + (float ) halfStep * 0.8),
+				 tRect.centerY() + halfStep);
+		
+		//canvas.drawRect(click, paint);//paints click zone
+		
+		paint.setTextSize(20);
+    	
+    	//canvas.drawText(String.valueOf(n.tileX) + String.valueOf(n.tileY), oval.centerX(), oval.centerY(), paint);
+    	
+    	
+    	screenBoard.put(click, n.nodeID);
+    	
+
+    	
+		
+	}
+
+	private void drawTileState(TileGameState s, TileNode n, Canvas canvas, float vStep, float f, int boarder, boolean vIsSmaller) {
+		Paint paint = new Paint();
+		
+		paint.setColor(Color.RED);
+	      
+        RectF oval;
+    	
+        float halfStep = vStep / 2;
+		
 		if(n.owner == model.getUserID()) {
 			
 			if(n.active) {
@@ -133,22 +218,16 @@ public class BetterDrawingView extends DrawingView{
 			
 			
 		} else {
-			paint.setColor(Color.LTGRAY);
+			paint.setColor(Color.TRANSPARENT);
 		}
 		
-		canvas.drawOval(oval, paint);
-    	
-		paint.setColor(Color.BLACK);
-		paint.setTextSize(20);
-    	
-    	//canvas.drawText(String.valueOf(n.owner), oval.centerX(), oval.centerY(), paint);
-    	
-    	
-    	screenBoard.put(oval, n.nodeID);
-    	
-
-    	
+		oval = new RectF(n.tileX * vStep,
+				 n.tileY * halfStep,
+				 (float) (n.tileX * vStep + vStep * 1.45),
+				 (float) (n.tileY * halfStep + vStep * 1.1));
 		
+		canvas.drawOval(oval, paint);
+		//canvas.drawRect(oval, paint);
 	}
     
 	@Override
