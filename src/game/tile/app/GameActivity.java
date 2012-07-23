@@ -1,6 +1,7 @@
 package game.tile.app;
 
 
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -86,12 +87,18 @@ public class GameActivity extends Activity{
     	
     	
     	if(state != null) {
-
-        	DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
+    		HashSet<DrawingView> drawingVs = new HashSet<DrawingView>();
+    		
+    		drawingVs.add((DrawingView)findViewById(R.id.boardLayout));
+    		
+    		
+        	for(DrawingView v: drawingVs) {
+               	v.setModel(model);          	
+            	model.setGameID(gameID);          	
+        		model.drawBoard(state, v);
+        	}
         	
-        	v.setModel(model);
-        	model.setGameID(gameID);
-    		model.drawBoard(state, v);
+ 
     		
     	} else {
 
