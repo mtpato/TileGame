@@ -219,6 +219,7 @@ public class BetterDrawingView extends DrawingView{
 			
 		} else {
 			paint.setColor(Color.TRANSPARENT);
+	
 		}
 		
 		oval = new RectF(n.tileX * vStep,

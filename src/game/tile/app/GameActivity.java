@@ -7,7 +7,10 @@ import java.util.TimerTask;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -74,6 +77,13 @@ public class GameActivity extends Activity{
     private void runBoard() {
     	state = model.getState(String.valueOf(gameID));
 
+    	LinearLayout l = (LinearLayout)findViewById(R.id.gameLayout);
+    	
+		Resources res = getResources();
+		Drawable d = res.getDrawable(R.drawable.board_bg);
+		
+    	l.setBackgroundDrawable(d);
+    	
     	
     	if(state != null) {
 
