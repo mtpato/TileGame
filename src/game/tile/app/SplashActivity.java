@@ -175,6 +175,8 @@ public class SplashActivity extends Activity {
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	
+    	model.quitGame();
     	System.out.println("Destroy: SPLASH");
 
     	
