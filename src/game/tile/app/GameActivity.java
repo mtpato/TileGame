@@ -90,9 +90,12 @@ public class GameActivity extends Activity{
     		HashSet<DrawingView> drawingVs = new HashSet<DrawingView>();
     		
     		drawingVs.add((DrawingView)findViewById(R.id.boardLayout));
+    		drawingVs.add((DrawingView)findViewById(R.id.scores));
     		
     		
         	for(DrawingView v: drawingVs) {
+        		v.setActivity(this);
+        		
                	v.setModel(model);          	
             	model.setGameID(gameID);          	
         		model.drawBoard(state, v);

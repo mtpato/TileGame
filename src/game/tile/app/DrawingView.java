@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Observable;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -24,6 +25,8 @@ public class DrawingView extends View{
 	private HashMap<RectF, Integer> screenBoard = new HashMap<RectF, Integer>();
 	
 	private AppModel model;
+	
+	protected Activity activity;
 	
 	public DrawingView(Context context) {
 		super(context);
@@ -204,17 +207,18 @@ public class DrawingView extends View{
 		}
 		
 		if(clicked) {
-			handleTouchEvent(x, y);
+			if(handleTouchEvent(x, y)) {
+				DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
 
-			DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
+				model.drawBoard(state, v);
+			}
 
-			model.drawBoard(state, v);
 		}
 
 		return true; // processed
 	}
 	
-	public void handleTouchEvent(float x, float y) {
+	public boolean handleTouchEvent(float x, float y) {
 		
 		
 		
@@ -222,9 +226,13 @@ public class DrawingView extends View{
 			
 			if (o.contains(x, y) && model.validMove(screenBoard.get(o), state)) {
 				model.makeMove(screenBoard.get(o),this);
+				
+				return true;
 			}
 
 		}
+		
+		return false;
 	
 	}
     
@@ -234,5 +242,10 @@ public class DrawingView extends View{
         this.invalidate();
         
     }
+
+	public void setActivity(Activity a) {
+		activity = a;
+		
+	}
     
 }

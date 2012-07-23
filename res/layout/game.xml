@@ -6,13 +6,13 @@
     android:orientation="vertical" 
     android:background="#FFFFFF">
 
-    <Button
+<!--     <Button
         android:id="@+id/cancelButtonClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="cancelButtonClick"
         android:text="Cancel" />
-
+ -->
 
 
     <RelativeLayout

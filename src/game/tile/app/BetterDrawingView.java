@@ -41,11 +41,17 @@ public class BetterDrawingView extends DrawingView{
 	
 	public BetterDrawingView(Context context) {
 		super(context);
+		
+		Resources res = getResources();
+		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public BetterDrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+		Resources res = getResources();
+		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -73,8 +79,7 @@ public class BetterDrawingView extends DrawingView{
 	// this method is called when the View is displayed
 	// or when Òinvalidate()Ó is called
 	protected void onDraw(Canvas canvas) {
-		Resources res = getResources();
-		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
+
 		
 		TileGameState s = (TileGameState) state;
 		
@@ -163,7 +168,7 @@ public class BetterDrawingView extends DrawingView{
 				 (float) (n.tileY * halfStep + step * 1.1));
 
         
-        System.out.println(tRect.height() + " " + tRect.width());
+        //System.out.println(tRect.height() + " " + tRect.width());
         
   
 		
@@ -196,7 +201,7 @@ public class BetterDrawingView extends DrawingView{
 	private void drawTileState(TileGameState s, TileNode n, Canvas canvas, float vStep, float f, int boarder, boolean vIsSmaller) {
 		Paint paint = new Paint();
 		
-		paint.setColor(Color.RED);
+		paint.setColor(Color.CYAN);
 	      
         RectF oval;
     	
@@ -205,16 +210,16 @@ public class BetterDrawingView extends DrawingView{
 		if(n.owner == model.getUserID()) {
 			
 			if(n.active) {
-				paint.setColor(Color.RED);
+				paint.setColor(Color.CYAN);
 			} else {
 				
-				paint.setColor(Color.rgb(255, 140, 140));
+				paint.setColor(Color.rgb(204, 230, 255));
 			}
 					
 		} else if(n.active){
 			
 			
-				paint.setColor(Color.CYAN);
+				paint.setColor(Color.YELLOW);
 			
 			
 		} else {
@@ -263,17 +268,18 @@ public class BetterDrawingView extends DrawingView{
 		}
 		
 		if(clicked) {
-			handleTouchEvent(x, y);
+			if(handleTouchEvent(x, y)) {
+				DrawingView v = (DrawingView)findViewById(R.id.boardLayout);
 
-			BetterDrawingView v = (BetterDrawingView)findViewById(R.id.boardLayout);
+				model.drawBoard(state, v);
+			}
 
-			model.drawBoard(state, v);
 		}
 
 		return true; // processed
 	}
 	
-	public void handleTouchEvent(float x, float y) {
+	public boolean handleTouchEvent(float x, float y) {
 		
 		
 		
@@ -281,9 +287,13 @@ public class BetterDrawingView extends DrawingView{
 			
 			if (o.contains(x, y) && model.validMove(screenBoard.get(o), state)) {
 				model.makeMove(screenBoard.get(o),this);
+				
+				return true;
 			}
 
 		}
+		
+		return false;
 	
 	}
     

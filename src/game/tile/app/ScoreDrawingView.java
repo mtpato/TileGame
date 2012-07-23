@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.util.AttributeSet;
@@ -34,18 +35,30 @@ public class ScoreDrawingView extends DrawingView{
 	
 	private AppModel model;
 	
-	
+	RectF exitButton;
 	
 	Bitmap tile;
 	
 	
+	
+	
+	
 	public ScoreDrawingView(Context context) {
 		super(context);
+		
+		Resources res = getResources();
+		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
+
+	
 		// TODO Auto-generated constructor stub
 	}
 	
 	public ScoreDrawingView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		Resources res = getResources();
+		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -73,163 +86,75 @@ public class ScoreDrawingView extends DrawingView{
 	// this method is called when the View is displayed
 	// or when Òinvalidate()Ó is called
 	protected void onDraw(Canvas canvas) {
-		Resources res = getResources();
-		tile = BitmapFactory.decodeResource(res, R.drawable.tile);
+		
+		int w = this.getWidth();
+		int h = this.getHeight();
 		
 		TileGameState s = (TileGameState) state;
 		
-		screenBoard.clear();
+		
+		System.out.println("in right draw: " +  w + " " + h);
 		
 		
 		
+		RectF opScoreRect = new RectF((w * 4) / 20,
+									(h * 2) / 6,
+									(w * 19) / 20,
+				 					(h * 3) / 6); 
 		
-		int hor = this.getWidth();
-		int ver = this.getHeight();
-		
-		//int boarder = (hor /s.height) / 2;
-		int boarder = 0;
-		
-		float hStep = (hor - boarder) / (float) s.width;
-		float vStep = (ver - boarder) / ((float) s.height / 2);
-		
-		hStep = (hor - hStep) / (float) s.width;//might be able to do better
-		vStep = (ver - vStep/2) / ((float) s.height / 2);//might be able to do better
+		RectF userScoreRect = new RectF(w / 20,
+										(h * 3) / 6,
+										(w * 16) / 20,
+										(h * 4) / 6); 
 	
 		
-		ArrayList<TileNode> nodes = new ArrayList<TileNode>(s.tiles.values()); 
-		Collections.sort(nodes, new TileNodeComparator());
+		//System.out.println(scoreRect);
 		
-		for(TileNode n : nodes) {
-			
-			if(vStep < hStep) {
-				drawTileState(s, n, canvas, vStep, (hStep - vStep) * s.height, boarder, true);
-			} else {
-				drawTileState(s, n, canvas, hStep, (vStep - hStep) * s.width, boarder, false);
-			}
-			
-			
-			
-		}
+		Paint p = new Paint();
 		
-		for(TileNode n : nodes) {
+		canvas.drawBitmap(tile, null, opScoreRect, p);
+		canvas.drawBitmap(tile, null, userScoreRect, p);
 		
-			if(vStep < hStep) {
-				drawNode(s, n, canvas, vStep, (hStep - vStep) * s.height, boarder, true);
-			} else {
-				drawNode(s, n, canvas, hStep, (vStep - hStep) * s.width, boarder, false);
-			}
-			
-			
-			
-		}
+		p.setColor(Color.WHITE);
 		
-		Paint paint = new Paint();
+		p.setTextSize(32);
+		
+		p.setTypeface(Typeface.DEFAULT_BOLD);
 		
 		
-		if(s.over) {
-			paint.setTextScaleX(2);
-			paint.setColor(Color.WHITE);
-			String winner = model.getWinner(s);
-			canvas.drawText("WINNER " + winner + "!", 25, ver/2, paint);
-			
-		}
-		
-		
-	}
+		p.setColor(Color.CYAN);
 
-    private void buildBoardLayout() {
-    	int w = this.getWidth();
-		int h = this.getHeight();
-		
-		
-		//game.tile.app.BetterDrawingView
-		
-	}
+		canvas.drawText(String.valueOf(s.scores.get(model.getUserID())), userScoreRect.centerX(), 
+				userScoreRect.bottom - userScoreRect.height() /4, p);
 
-	private void drawNode(TileGameState s, TileNode n, Canvas canvas, float step, float f, int boarder, boolean vIsSmaller) {
-        Paint paint = new Paint();
-        
-        paint.setColor(Color.RED);
-      
-        RectF tRect;
-    	
-        float halfStep = step / 2;
-        
-        
-        
-		tRect = new RectF(n.tileX * step,
-				 n.tileY * halfStep,
-				 (float) (n.tileX * step + step * 1.45),
-				 (float) (n.tileY * halfStep + step * 1.1));
-
-        
-        System.out.println(tRect.height() + " " + tRect.width());
-        
-  
-		
-    	
+		p.setColor(Color.YELLOW);
 		
 		
-		canvas.drawBitmap(tile, null, tRect, paint);
-    	
-		paint.setColor(Color.GREEN);
-		
-		RectF click = new RectF((float) (tRect.centerX() - ((float) halfStep * 0.8)),
-				 tRect.centerY() - halfStep,
-				 (float) (tRect.centerX() + (float ) halfStep * 0.8),
-				 tRect.centerY() + halfStep);
-		
-		//canvas.drawRect(click, paint);//paints click zone
-		
-		paint.setTextSize(20);
-    	
-    	//canvas.drawText(String.valueOf(n.tileX) + String.valueOf(n.tileY), oval.centerX(), oval.centerY(), paint);
-    	
-    	
-    	screenBoard.put(click, n.nodeID);
-    	
-
-    	
-		
-	}
-
-	private void drawTileState(TileGameState s, TileNode n, Canvas canvas, float vStep, float f, int boarder, boolean vIsSmaller) {
-		Paint paint = new Paint();
-		
-		paint.setColor(Color.RED);
-	      
-        RectF oval;
-    	
-        float halfStep = vStep / 2;
-		
-		if(n.owner == model.getUserID()) {
-			
-			if(n.active) {
-				paint.setColor(Color.RED);
-			} else {
+		for(int player : s.players) {
+			if (player != model.getUserID()) {
+				canvas.drawText(String.valueOf(s.scores.get(player)), opScoreRect.left, opScoreRect.centerY(), p);
 				
-				paint.setColor(Color.rgb(255, 140, 140));
 			}
-					
-		} else if(n.active){
-			
-			
-				paint.setColor(Color.CYAN);
-			
-			
-		} else {
-			paint.setColor(Color.TRANSPARENT);
-	
 		}
 		
-		oval = new RectF(n.tileX * vStep,
-				 n.tileY * halfStep,
-				 (float) (n.tileX * vStep + vStep * 1.45),
-				 (float) (n.tileY * halfStep + vStep * 1.1));
+		if(exitButton == null) {
+			exitButton = new RectF(w / 10,
+					(h * 5) / 6,
+					(w * 9) / 10,
+					h); 
+		}
+
 		
-		canvas.drawOval(oval, paint);
-		//canvas.drawRect(oval, paint);
+		
+		p.setColor(Color.GRAY);
+		
+		canvas.drawRect(exitButton, p);
+		
+		p.setColor(Color.BLACK);
+		canvas.drawText(String.valueOf("EXIT"), exitButton.left + w / 10, exitButton.centerY(), p);
+		
 	}
+
     
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -263,27 +188,23 @@ public class ScoreDrawingView extends DrawingView{
 		}
 		
 		if(clicked) {
-			handleTouchEvent(x, y);
+			if(handleTouchEvent(x, y)) {
 
-			ScoreDrawingView v = (ScoreDrawingView)findViewById(R.id.boardLayout);
-
-			model.drawBoard(state, v);
-		}
-
-		return true; // processed
-	}
-	
-	public void handleTouchEvent(float x, float y) {
-		
-		
-		
-		for (RectF o : screenBoard.keySet()) {
-			
-			if (o.contains(x, y) && model.validMove(screenBoard.get(o), state)) {
-				model.makeMove(screenBoard.get(o),this);
+				this.activity.finish();
+				
 			}
 
 		}
+		 
+		return true; // processed
+	}
+	
+	public boolean handleTouchEvent(float x, float y) {
+		
+		if(exitButton.contains(x, y)) return true;
+		else return false;
+		
+
 	
 	}
     
