@@ -286,26 +286,30 @@ public class AppModel {
 		String[] string = callServer("getGames").split(":");
 
 		if (string[0].equals("games")) {
+			
+			if(string.length > 1) {
+				String[] gamesStrings = string[1].split(",");
 
-			String[] gamesStrings = string[1].split(",");
+				for (String g : gamesStrings) {
+					String[] players = g.split("\\|");
 
-			for (String g : gamesStrings) {
-				String[] players = g.split("\\|");
+					int gameID = Integer.valueOf(players[0]);
 
-				int gameID = Integer.valueOf(players[0]);
+					for (int i = 1; i < players.length; i++) {
 
-				for (int i = 1; i < players.length; i++) {
+						String[] user = players[i].split("-");
 
-					String[] user = players[i].split("-");
-
-					if (!user[0].equals(userName)) {
-						games.put(gameID, user[0]);
-					} else {
-						userID = Integer.valueOf(user[1]);
+						if (!user[0].equals(userName)) {
+							games.put(gameID, user[0]);
+						} else {
+							userID = Integer.valueOf(user[1]);
+						}
 					}
-				}
 
+				}
 			}
+
+
 			return true;
 
 		} else if(string[0].equals("error")){		
@@ -463,7 +467,7 @@ public class AppModel {
 		
 		String reply = callServer("newGame:" + in);
 		
-		System.out.println("reply: " + reply);
+		//System.out.println("reply: " + reply);
 		
 		if(reply.equals("done:gameCreated")) {
 			return true;
@@ -498,9 +502,9 @@ public class AppModel {
 		TileGameState s = (TileGameState) state;
 		TileNode t = s.tiles.get(String.valueOf(nodeID));
 		
-		System.out.println(nodeID);
-		System.out.println(s.tiles);
-		System.out.println(t);
+		//System.out.println(nodeID);
+		//System.out.println(s.tiles);
+		//System.out.println(t);
 		
 		if(s.turn != userID || t.active || t.owner != userID ) {
 			return false;

@@ -69,15 +69,21 @@ public class GameActivity extends Activity{
 	       // System.out.println("after init model"); 
 		
 
+	        runBoard();
 			timer();
-			runBoard();
+			
 	        
 	    }
     
     
-    private void runBoard() {
+    protected void runBoard() {
+    	
+    	
+    	
     	state = model.getState(String.valueOf(gameID));
 
+    	//System.out.println("in run board "  + ((TileGameState) state).turn);
+    	
     	LinearLayout l = (LinearLayout)findViewById(R.id.gameLayout);
     	
 		Resources res = getResources();
@@ -132,20 +138,22 @@ public class GameActivity extends Activity{
 
     }
     
+    
 
-    /**
+	/**
      * 
      */
-    public Runnable getStateTimer = new Runnable() {
-    	public void run() {
+	public Runnable getStateTimer = new Runnable() {
+		public void run() {
+			
 
-    			runBoard();
-    		    timerHandler.postDelayed(this, 2000);
-    		
-    	}		
-    };	
-    
-    
+			runBoardTimer();
+
+			
+			timerHandler.postDelayed(this, 2000);
+
+		}
+	};
 
     public void refreshButtonClick(View view) {
     	runBoard();
@@ -155,6 +163,17 @@ public class GameActivity extends Activity{
     	
      }
 	
+
+	protected void runBoardTimer() {
+		
+		//System.out.println("turn" + ((TileGameState) state).turn);
+		
+		if(((TileGameState) state).turn != model.getUserID()) {
+			runBoard();
+		}
+		
+		
+	}
 
 	/**
 	 * newUserButtonclick

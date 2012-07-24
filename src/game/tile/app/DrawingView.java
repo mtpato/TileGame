@@ -182,7 +182,7 @@ public class DrawingView extends View{
 
 		float x = event.getX();
 		float y = event.getY();
-		System.out.println(x + " " + y);
+		//System.out.println(x + " " + y);
 		
 
 		int action = event.getAction();

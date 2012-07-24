@@ -133,7 +133,7 @@ public class TileModel extends GameModel{
 		String[] splitString = s.split(",");
 		
 		for(String line: splitString) {
-			System.out.println(line);
+			//System.out.println(line);
 			String[] temp = line.split("=");
 			
 			args.put(temp[0], temp[1]);
