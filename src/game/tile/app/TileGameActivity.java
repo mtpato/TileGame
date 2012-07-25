@@ -6,9 +6,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,13 @@ public class TileGameActivity extends Activity {
 		// if(this.getIntent().getExtras().get("socket").equals("true")){
 		model.setSocket(SocketHolder.getS());
 
+    	LinearLayout l = (LinearLayout)findViewById(R.id.loginLayout);
+    	
+		Resources res = getResources();
+		Drawable d = res.getDrawable(R.drawable.board_bg);
+		
+    	l.setBackgroundDrawable(d);
+		
 	       
         if(!model.initIO()) {
         	Intent intent=new Intent();

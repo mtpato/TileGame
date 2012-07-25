@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +41,14 @@ public class SplashActivity extends Activity {
     
     
     private void run() {
+    	LinearLayout l = (LinearLayout)findViewById(R.id.splashLayout);
+    	
+		Resources res = getResources();
+		Drawable d = res.getDrawable(R.drawable.splash);
+		
+    	l.setBackgroundDrawable(d);
+    	
+    	
     	model = new AppModel();
     	model.setConnectMan((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
     	System.out.println("attempting to set up con");

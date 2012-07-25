@@ -9,6 +9,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +39,15 @@ public class GamesMenuActivity extends Activity{
         model.setUserName((String) this.getIntent().getExtras().get("userName"));
         
         buttons = new HashSet<Button>();
+        
+        
+    	LinearLayout l = (LinearLayout)findViewById(R.id.gamesMenuBackground);
+    	
+		Resources res = getResources();
+		Drawable d = res.getDrawable(R.drawable.board_bg);
+		
+    	l.setBackgroundDrawable(d);
+        
        
         if(!model.initIO()) {
         	Intent intent=new Intent();
