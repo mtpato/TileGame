@@ -526,8 +526,10 @@ public class AppModel {
 	}
 
 	public void quitGame() {
+		
 		callServer("quit");
 		
+
 	}
 
 	public void setConnectMan(ConnectivityManager connectMan) {
