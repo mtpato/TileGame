@@ -38,7 +38,7 @@ public class AppModel {
 
 	private Socket socket;
 	private int port = 4356;
-	private String hostname = "76.124.116.1";
+	private String hostname = "76.124.118.128";
 
 	private String gameName = "tileGame";
 
