@@ -37,8 +37,9 @@ public class AppModel {
 	private BufferedWriter out;
 
 	private Socket socket;
-	private int port = 4356;
-	private String hostname = "76.124.118.128";
+	private int port = 4356;//test server
+	//private int port = 8123; // local machine
+	private String hostname = "68.50.217.122";
 
 	private String gameName = "tileGame";
 
